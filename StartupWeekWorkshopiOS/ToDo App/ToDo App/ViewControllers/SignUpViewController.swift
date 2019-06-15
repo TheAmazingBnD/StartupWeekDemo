@@ -1,5 +1,5 @@
 //
-//  SignUpDetailViewController.swift
+//  SignUpViewController.swift
 //  ToDo App
 //
 //  Created by Andrew Foghel on 6/15/19.
@@ -8,16 +8,12 @@
 
 import UIKit
 
-// TODO: handle confirm password
-// TODO: handle alerting errors
-
-class SignUpDetailViewController: UIViewController {
+class SignUpViewController: UITableViewController {
     
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var confirmPasswordTextField: UITextField!
     
     @IBAction func signUpButtonTapped(_ sender: Any) {
         AuthenticationManager.shared.signUp(with: emailTextField.text,

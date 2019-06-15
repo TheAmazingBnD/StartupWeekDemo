@@ -66,7 +66,6 @@ class DatabaseManager {
         Database.database().reference().child(Nodes.reminders.rawValue).child(uid).child(id).removeValue { error, _ in
             completion(error)
         }
-        
     }
     
     func fetchCurrentUserReminders(completion: @escaping ([Reminder]?, Error?) -> ()) {

@@ -8,13 +8,12 @@
 
 import UIKit
 
-class ReminderDetailViewController: UIViewController {
+class ReminderDetailViewController: UITableViewController {
     
     var reminder: Reminder?
     
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var descriptionTextView: UITextView!
-    @IBOutlet weak var saveButton: UIButton!
     
     @IBAction func saveButtonTapped(_ sender: Any) {
         guard let title = titleTextField.text,
@@ -36,12 +35,9 @@ class ReminderDetailViewController: UIViewController {
         super.viewDidLoad()
         
         titleTextField.text = reminder?.title
-        
         descriptionTextView.text = reminder?.description
-        descriptionTextView.layer.borderColor = UIColor.lightGray.cgColor
-        descriptionTextView.layer.borderWidth = 1
         
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
+        title = reminder != nil ? "Edit Reminder" : "Create Reminder"
     }
     
     @objc private func dismissKeyboard() {
