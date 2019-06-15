@@ -67,6 +67,23 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		0B514C9322B584CF00360139 /* ServiceLayer */ = {
+			isa = PBXGroup;
+			children = (
+				0B514C8122B4731D00360139 /* DatabaseManager.swift */,
+				0B514C8322B4755B00360139 /* AuthenticationManager.swift */,
+			);
+			path = ServiceLayer;
+			sourceTree = "<group>";
+		};
+		0B514C9422B584F500360139 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0B514C8B22B5633600360139 /* UIViewControllerExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		7F1E9B3122B1B2F900D73295 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -86,9 +103,6 @@
 				7F9A7CB522B1AAB300C26216 /* Info.plist */,
 				7F9A7CBB22B1AE8100C26216 /* GoogleService-Info.plist */,
 				7F9A7CB022B1AAB300C26216 /* Assets.xcassets */,
-				0B514C8122B4731D00360139 /* DatabaseManager.swift */,
-				0B514C8322B4755B00360139 /* AuthenticationManager.swift */,
-				0B514C8B22B5633600360139 /* UIViewControllerExtensions.swift */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";
@@ -122,6 +136,8 @@
 		7F9A7CA822B1AAB100C26216 /* ToDo App */ = {
 			isa = PBXGroup;
 			children = (
+				0B514C9422B584F500360139 /* Extensions */,
+				0B514C9322B584CF00360139 /* ServiceLayer */,
 				0B514C7E22B471E400360139 /* Models */,
 				7F1E9B3422B1B32300D73295 /* Views */,
 				7F1E9B3122B1B2F900D73295 /* ViewControllers */,
