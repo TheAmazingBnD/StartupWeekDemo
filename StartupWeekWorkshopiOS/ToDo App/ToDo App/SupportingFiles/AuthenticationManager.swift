@@ -38,7 +38,8 @@ class AuthenticationManager {
                                         email: email,
                                         firstName: firstName,
                                         lastName: lastName)
-            
+            user?.saveToDefaults()
+            self?.user = user
             completion(user, nil)
         }
     }
@@ -49,7 +50,7 @@ class AuthenticationManager {
                 return
         }
         
-        Auth.auth().signIn(withEmail: email, password: password) { result, error in
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
             if let err = error {
                 print("Error Signing In: \(err.localizedDescription)")
                 completion(nil, err)
@@ -62,9 +63,27 @@ class AuthenticationManager {
                 return
             }
             
-            // TODO: handle creating a user with
-            
-            //            completion(user, nil)
+            DatabaseManager.shared.fetchUser(with: result.user.uid, completion: { [weak self] user, error in
+                if let err = error {
+                    completion(nil, err)
+                    return
+                }
+                
+                user?.saveToDefaults()
+                self?.user = user
+                completion(user, nil)
+            })
+        }
+    }
+    
+    func fetchCurrentUser(with uid: String?, completion: @escaping (User?, Error?) -> ()) {
+        guard let uid = uid else {
+            return
+        }
+        
+        DatabaseManager.shared.fetchUser(with: uid) { [weak self] user, error in
+            self?.user = user
+            completion(user, error)
         }
     }
     

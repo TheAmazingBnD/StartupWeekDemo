@@ -3,18 +3,21 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0B514C7D22B471CB00360139 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C7C22B471CB00360139 /* Reminder.swift */; };
-		0B514C8022B4723F00360139 /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C7F22B4723F00360139 /* Coordinate.swift */; };
-		0B514C8222B4731D00360139 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8122B4731D00360139 /* FirebaseManager.swift */; };
+		0B514C8222B4731D00360139 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8122B4731D00360139 /* DatabaseManager.swift */; };
 		0B514C8422B4755B00360139 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8322B4755B00360139 /* AuthenticationManager.swift */; };
 		0B514C8622B4757600360139 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8522B4757600360139 /* User.swift */; };
+		0B514C8822B4C1C600360139 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8722B4C1C600360139 /* SignUpViewController.swift */; };
+		0B514C8A22B5612800360139 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8922B5612800360139 /* LoginViewController.swift */; };
+		0B514C8C22B5633600360139 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8B22B5633600360139 /* UIViewControllerExtensions.swift */; };
+		0B514C8E22B565D500360139 /* RemindersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8D22B565D500360139 /* RemindersViewController.swift */; };
+		0B514C9022B5689A00360139 /* ReminderDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8F22B5689A00360139 /* ReminderDetailViewController.swift */; };
 		4A0BA38DB90E1E8AAE4CD949 /* Pods_ToDo_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFC0D430114E4247E2FAE259 /* Pods_ToDo_App.framework */; };
 		7F9A7CAA22B1AAB100C26216 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A7CA922B1AAB100C26216 /* AppDelegate.swift */; };
-		7F9A7CAC22B1AAB100C26216 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A7CAB22B1AAB100C26216 /* SignupViewController.swift */; };
 		7F9A7CAF22B1AAB100C26216 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F9A7CAD22B1AAB100C26216 /* Main.storyboard */; };
 		7F9A7CB122B1AAB300C26216 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7F9A7CB022B1AAB300C26216 /* Assets.xcassets */; };
 		7F9A7CB422B1AAB300C26216 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F9A7CB222B1AAB300C26216 /* LaunchScreen.storyboard */; };
@@ -24,13 +27,16 @@
 /* Begin PBXFileReference section */
 		033BCFFC76FE99871385DBC6 /* Pods-ToDo App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDo App.release.xcconfig"; path = "Target Support Files/Pods-ToDo App/Pods-ToDo App.release.xcconfig"; sourceTree = "<group>"; };
 		0B514C7C22B471CB00360139 /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
-		0B514C7F22B4723F00360139 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
-		0B514C8122B4731D00360139 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
+		0B514C8122B4731D00360139 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		0B514C8322B4755B00360139 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		0B514C8522B4757600360139 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		0B514C8722B4C1C600360139 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		0B514C8922B5612800360139 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		0B514C8B22B5633600360139 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		0B514C8D22B565D500360139 /* RemindersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersViewController.swift; sourceTree = "<group>"; };
+		0B514C8F22B5689A00360139 /* ReminderDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderDetailViewController.swift; sourceTree = "<group>"; };
 		7F9A7CA622B1AAB100C26216 /* ToDo App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ToDo App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F9A7CA922B1AAB100C26216 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7F9A7CAB22B1AAB100C26216 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		7F9A7CAE22B1AAB100C26216 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7F9A7CB022B1AAB300C26216 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7F9A7CB322B1AAB300C26216 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -56,7 +62,6 @@
 			isa = PBXGroup;
 			children = (
 				0B514C7C22B471CB00360139 /* Reminder.swift */,
-				0B514C7F22B4723F00360139 /* Coordinate.swift */,
 				0B514C8522B4757600360139 /* User.swift */,
 			);
 			path = Models;
@@ -65,7 +70,10 @@
 		7F1E9B3122B1B2F900D73295 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				7F9A7CAB22B1AAB100C26216 /* SignupViewController.swift */,
+				0B514C8722B4C1C600360139 /* SignUpViewController.swift */,
+				0B514C8922B5612800360139 /* LoginViewController.swift */,
+				0B514C8D22B565D500360139 /* RemindersViewController.swift */,
+				0B514C8F22B5689A00360139 /* ReminderDetailViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -78,8 +86,9 @@
 				7F9A7CB522B1AAB300C26216 /* Info.plist */,
 				7F9A7CBB22B1AE8100C26216 /* GoogleService-Info.plist */,
 				7F9A7CB022B1AAB300C26216 /* Assets.xcassets */,
-				0B514C8122B4731D00360139 /* FirebaseManager.swift */,
+				0B514C8122B4731D00360139 /* DatabaseManager.swift */,
 				0B514C8322B4755B00360139 /* AuthenticationManager.swift */,
+				0B514C8B22B5633600360139 /* UIViewControllerExtensions.swift */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";
@@ -255,12 +264,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B514C7D22B471CB00360139 /* Reminder.swift in Sources */,
-				7F9A7CAC22B1AAB100C26216 /* SignupViewController.swift in Sources */,
-				0B514C8222B4731D00360139 /* FirebaseManager.swift in Sources */,
+				0B514C8222B4731D00360139 /* DatabaseManager.swift in Sources */,
 				0B514C8422B4755B00360139 /* AuthenticationManager.swift in Sources */,
 				7F9A7CAA22B1AAB100C26216 /* AppDelegate.swift in Sources */,
-				0B514C8022B4723F00360139 /* Coordinate.swift in Sources */,
+				0B514C8E22B565D500360139 /* RemindersViewController.swift in Sources */,
+				0B514C8C22B5633600360139 /* UIViewControllerExtensions.swift in Sources */,
+				0B514C8A22B5612800360139 /* LoginViewController.swift in Sources */,
+				0B514C8822B4C1C600360139 /* SignUpViewController.swift in Sources */,
 				0B514C8622B4757600360139 /* User.swift in Sources */,
+				0B514C9022B5689A00360139 /* ReminderDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
