@@ -57,6 +57,18 @@ class DatabaseManager {
         }
     }
     
+    func deleteReminder(id: String?, completion: @escaping (Error?) -> ()) {
+        guard let uid = AuthenticationManager.shared.user?.uid,
+            let id = id else {
+            return
+        }
+        
+        Database.database().reference().child(Nodes.reminders.rawValue).child(uid).child(id).removeValue { error, _ in
+            completion(error)
+        }
+        
+    }
+    
     func fetchCurrentUserReminders(completion: @escaping ([Reminder]?, Error?) -> ()) {
 
         guard let uid = AuthenticationManager.shared.user?.uid else {

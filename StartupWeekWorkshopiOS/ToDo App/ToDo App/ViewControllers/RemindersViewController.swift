@@ -41,27 +41,9 @@ class RemindersViewController: UIViewController {
             performSegue(withIdentifier: "AuthenticateUser", sender: nil)
         }
     }
-    
-    private func fetchReminders() {
-        DatabaseManager.shared.fetchCurrentUserReminders(completion: { [weak self] reminders, error in
-            if let err = error {
-                self?.presentAlert(for: err, title: "Unable To Fetch Posts")
-                return
-            }
-            
-            
-            guard let reminders = reminders else {
-                return
-            }
-            
-            self?.reminders = reminders
-            
-            DispatchQueue.main.async { [weak self] in
-                self?.tableView.reloadData()
-            }
-        })
-    }
 }
+
+// UITableView
 
 extension RemindersViewController: UITableViewDelegate, UITableViewDataSource {
     
@@ -85,10 +67,58 @@ extension RemindersViewController: UITableViewDelegate, UITableViewDataSource {
         performSegue(withIdentifier: "EditReminder", sender: nil)
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let removedReminder = reminders.remove(at: indexPath.row)
+            delete(reminder: removedReminder)
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "EditReminder",
             let destination = segue.destination as? ReminderDetailViewController {
             destination.reminder = selectedReminder
+        }
+    }
+}
+
+// Database Manager
+
+extension RemindersViewController {
+    private func fetchReminders() {
+        DatabaseManager.shared.fetchCurrentUserReminders(completion: { [weak self] reminders, error in
+            if let err = error {
+                self?.presentAlert(for: err, title: "Unable To Fetch Posts")
+                return
+            }
+            
+            
+            guard let reminders = reminders else {
+                return
+            }
+            
+            self?.reminders = reminders
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+            }
+        })
+    }
+    
+    private func delete(reminder: Reminder?) {
+        guard let reminder = reminder else {
+            return
+        }
+        
+        DatabaseManager.shared.deleteReminder(id: reminder.id) { [weak self] error in
+            if let err = error {
+                self?.presentAlert(for: err, title: "Unable To Delete Reminder")
+                return
+            }
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+            }
         }
     }
 }
