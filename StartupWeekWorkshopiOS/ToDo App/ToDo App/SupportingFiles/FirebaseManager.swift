@@ -1,5 +1,5 @@
 //
-//  FirebaseManager.swift
+//  DatabaseManager.swift
 //  ToDo App
 //
 //  Created by Andrew Foghel on 6/14/19.
@@ -20,5 +20,12 @@ class DatabaseManager {
     // we make this private so that no other class can create an instance of this class
     private init() {}
     
-    
+    func putUser(user: User?) {
+        guard let user = user,
+            let uid = user.uid else {
+            return
+        }
+        
+        Database.database().reference().child("Users").child(uid).setValue(user.toDictionary())
+    }
 }
