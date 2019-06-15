@@ -14,11 +14,15 @@ struct Reminder: Equatable {
     var title: String?
     var description: String?
     var timestamp: TimeInterval
+    var isComplete: Bool
 }
 
 extension Reminder {
     func toDictionary() -> [String : Any] {
-        return ["title" : title ?? "", "description" : description ?? "", "timestamp" : timestamp]
+        return ["title" : title ?? "",
+                "description" : description ?? "",
+                "timestamp" : timestamp,
+                "isComplete" : isComplete]
     }
 }
 
@@ -31,7 +35,12 @@ extension DataSnapshot {
         let title = dict["title"] as? String
         let description = dict["description"] as? String
         let timestamp = dict["timestamp"] as? TimeInterval ?? Date().timeIntervalSince1970
+        let isComplete = dict["isComplete"] as? Bool ?? false
         
-        return Reminder(id: id, title: title, description: description, timestamp: timestamp)
+        return Reminder(id: id,
+                        title: title,
+                        description: description,
+                        timestamp: timestamp,
+                        isComplete: isComplete)
     }
 }

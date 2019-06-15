@@ -18,7 +18,9 @@ struct User: Equatable {
 
 extension User {
     func toDictionary() -> [String : Any] {
-        return ["email" : email ?? "", "firstName" : firstName ?? "", "lastName" : lastName ?? ""]
+        return ["email" : email ?? "",
+                "firstName" : firstName ?? "",
+                "lastName" : lastName ?? ""]
     }
     
     func saveToDefaults() {
@@ -35,6 +37,10 @@ extension DataSnapshot {
         let email = dict["email"] as? String
         let firstName = dict["firstName"] as? String
         let lastName = dict["lastName"] as? String
-        return User(uid: uid, email: email, firstName: firstName, lastName: lastName)
+        
+        return User(uid: uid,
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName)
     }
 }

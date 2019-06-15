@@ -51,7 +51,9 @@ class DatabaseManager {
         
         let uuid = reminder?.id ?? UUID().uuidString
         let timestamp = reminder?.timestamp ?? Date().timeIntervalSince1970
-        let reminder = Reminder(id: uuid, title: title, description: description, timestamp: timestamp)
+        let isComplete = reminder?.isComplete ?? false
+        let reminder = Reminder(id: uuid, title: title, description: description, timestamp: timestamp, isComplete: isComplete)
+        
         Database.database().reference().child(Nodes.reminders.rawValue).child(uid).child(uuid).setValue(reminder.toDictionary()) { (error, reference) in
             completion(error)
         }

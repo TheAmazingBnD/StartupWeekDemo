@@ -469,6 +469,36 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection id="uOM-rw-qfX">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="55" id="7Xh-VN-nxk">
+                                        <rect key="frame" x="0.0" y="350.5" width="414" height="55"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7Xh-VN-nxk" id="X3l-Be-63p">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="54.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K88-Hn-W91">
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="54.5"/>
+                                                    <color key="backgroundColor" red="0.31372549020000001" green="0.61960784310000006" blue="0.1843137255" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <state key="normal" title="Mark As Done">
+                                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="completeButtonTapped:" destination="Ijk-RE-0DY" eventType="touchUpInside" id="RRn-L9-NVH"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="K88-Hn-W91" firstAttribute="leading" secondItem="X3l-Be-63p" secondAttribute="leading" id="7sK-3K-H6z"/>
+                                                <constraint firstAttribute="bottom" secondItem="K88-Hn-W91" secondAttribute="bottom" id="FLS-oA-FpW"/>
+                                                <constraint firstAttribute="trailing" secondItem="K88-Hn-W91" secondAttribute="trailing" id="Frd-uw-jkB"/>
+                                                <constraint firstItem="K88-Hn-W91" firstAttribute="top" secondItem="X3l-Be-63p" secondAttribute="top" id="yU2-RK-MPB"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="Ijk-RE-0DY" id="Fx0-Ll-xWO"/>
@@ -483,6 +513,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="completeButton" destination="K88-Hn-W91" id="fEG-Pr-7GA"/>
                         <outlet property="descriptionTextView" destination="LG2-QC-rPn" id="4iX-j9-yx7"/>
                         <outlet property="titleTextField" destination="V95-gK-2WG" id="hcd-so-d4a"/>
                     </connections>

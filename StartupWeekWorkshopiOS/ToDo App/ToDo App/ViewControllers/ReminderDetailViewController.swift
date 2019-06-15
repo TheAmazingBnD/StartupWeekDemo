@@ -14,8 +14,36 @@ class ReminderDetailViewController: UITableViewController {
     
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var descriptionTextView: UITextView!
+    @IBOutlet weak var completeButton: UIButton!
     
     @IBAction func saveButtonTapped(_ sender: Any) {
+        save(reminder: reminder)
+    }
+    
+    @IBAction func completeButtonTapped(_ sender: Any) {
+        guard let reminder = reminder else {
+            return
+        }
+        
+        self.reminder?.isComplete = !reminder.isComplete
+        toggleButtonState()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        titleTextField.text = reminder?.title
+        descriptionTextView.text = reminder?.description
+        
+        title = reminder != nil ? "Edit Reminder" : "Create Reminder"
+        toggleButtonState()
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    private func save(reminder: Reminder?) {
         guard let title = titleTextField.text,
             let description = descriptionTextView.text else {
                 return
@@ -31,16 +59,18 @@ class ReminderDetailViewController: UITableViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        titleTextField.text = reminder?.title
-        descriptionTextView.text = reminder?.description
-        
-        title = reminder != nil ? "Edit Reminder" : "Create Reminder"
+    private func toggleButtonState() {
+        if reminder?.isComplete == true {
+            completeButton.setTitle("Mark As Incomplete", for: .normal)
+            completeButton.backgroundColor = #colorLiteral(red: 0.5807225108, green: 0.066734083, blue: 0, alpha: 1)
+        }
+        else {
+            completeButton.setTitle("Mark As Done", for: .normal)
+            completeButton.backgroundColor = #colorLiteral(red: 0.3084011078, green: 0.5618229508, blue: 0, alpha: 1)
+        }
     }
     
-    @objc private func dismissKeyboard() {
-        view.endEditing(true)
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return reminder == nil ? 2 : 3
     }
 }
