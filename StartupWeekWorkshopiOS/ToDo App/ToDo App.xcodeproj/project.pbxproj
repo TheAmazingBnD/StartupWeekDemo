@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B514C7D22B471CB00360139 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C7C22B471CB00360139 /* Reminder.swift */; };
+		0B514C8022B4723F00360139 /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C7F22B4723F00360139 /* Coordinate.swift */; };
 		4A0BA38DB90E1E8AAE4CD949 /* Pods_ToDo_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFC0D430114E4247E2FAE259 /* Pods_ToDo_App.framework */; };
 		7F9A7CAA22B1AAB100C26216 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A7CA922B1AAB100C26216 /* AppDelegate.swift */; };
 		7F9A7CAC22B1AAB100C26216 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A7CAB22B1AAB100C26216 /* SignupViewController.swift */; };
@@ -18,6 +20,8 @@
 
 /* Begin PBXFileReference section */
 		033BCFFC76FE99871385DBC6 /* Pods-ToDo App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDo App.release.xcconfig"; path = "Target Support Files/Pods-ToDo App/Pods-ToDo App.release.xcconfig"; sourceTree = "<group>"; };
+		0B514C7C22B471CB00360139 /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
+		0B514C7F22B4723F00360139 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
 		7F9A7CA622B1AAB100C26216 /* ToDo App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ToDo App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F9A7CA922B1AAB100C26216 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7F9A7CAB22B1AAB100C26216 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
@@ -42,9 +46,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		7F1E9B3022B1B2F100D73295 /* Models */ = {
+		0B514C7E22B471E400360139 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0B514C7C22B471CB00360139 /* Reminder.swift */,
+				0B514C7F22B4723F00360139 /* Coordinate.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -98,7 +104,7 @@
 		7F9A7CA822B1AAB100C26216 /* ToDo App */ = {
 			isa = PBXGroup;
 			children = (
-				7F1E9B3022B1B2F100D73295 /* Models */,
+				0B514C7E22B471E400360139 /* Models */,
 				7F1E9B3422B1B32300D73295 /* Views */,
 				7F1E9B3122B1B2F900D73295 /* ViewControllers */,
 				7F1E9B3222B1B30C00D73295 /* SupportingFiles */,
@@ -246,8 +252,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B514C7D22B471CB00360139 /* Reminder.swift in Sources */,
 				7F9A7CAC22B1AAB100C26216 /* SignupViewController.swift in Sources */,
 				7F9A7CAA22B1AAB100C26216 /* AppDelegate.swift in Sources */,
+				0B514C8022B4723F00360139 /* Coordinate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
