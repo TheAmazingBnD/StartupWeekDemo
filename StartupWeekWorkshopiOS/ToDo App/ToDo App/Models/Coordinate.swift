@@ -9,7 +9,7 @@
 import Foundation
 
 // TODO: may want to make these doubles (+ for N, - for S)
-struct Coordinate: Codable {
+struct Coordinate: Codable, Equatable {
     var lat: String?
     var lon: String?
 }

@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		0B514C7D22B471CB00360139 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C7C22B471CB00360139 /* Reminder.swift */; };
 		0B514C8022B4723F00360139 /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C7F22B4723F00360139 /* Coordinate.swift */; };
+		0B514C8222B4731D00360139 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8122B4731D00360139 /* FirebaseManager.swift */; };
+		0B514C8422B4755B00360139 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8322B4755B00360139 /* AuthenticationManager.swift */; };
+		0B514C8622B4757600360139 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8522B4757600360139 /* User.swift */; };
 		4A0BA38DB90E1E8AAE4CD949 /* Pods_ToDo_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFC0D430114E4247E2FAE259 /* Pods_ToDo_App.framework */; };
 		7F9A7CAA22B1AAB100C26216 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A7CA922B1AAB100C26216 /* AppDelegate.swift */; };
 		7F9A7CAC22B1AAB100C26216 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A7CAB22B1AAB100C26216 /* SignupViewController.swift */; };
@@ -22,6 +25,9 @@
 		033BCFFC76FE99871385DBC6 /* Pods-ToDo App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDo App.release.xcconfig"; path = "Target Support Files/Pods-ToDo App/Pods-ToDo App.release.xcconfig"; sourceTree = "<group>"; };
 		0B514C7C22B471CB00360139 /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
 		0B514C7F22B4723F00360139 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
+		0B514C8122B4731D00360139 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
+		0B514C8322B4755B00360139 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
+		0B514C8522B4757600360139 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7F9A7CA622B1AAB100C26216 /* ToDo App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ToDo App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F9A7CA922B1AAB100C26216 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7F9A7CAB22B1AAB100C26216 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
@@ -51,6 +57,7 @@
 			children = (
 				0B514C7C22B471CB00360139 /* Reminder.swift */,
 				0B514C7F22B4723F00360139 /* Coordinate.swift */,
+				0B514C8522B4757600360139 /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -71,6 +78,8 @@
 				7F9A7CB522B1AAB300C26216 /* Info.plist */,
 				7F9A7CBB22B1AE8100C26216 /* GoogleService-Info.plist */,
 				7F9A7CB022B1AAB300C26216 /* Assets.xcassets */,
+				0B514C8122B4731D00360139 /* FirebaseManager.swift */,
+				0B514C8322B4755B00360139 /* AuthenticationManager.swift */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";
@@ -254,8 +263,11 @@
 			files = (
 				0B514C7D22B471CB00360139 /* Reminder.swift in Sources */,
 				7F9A7CAC22B1AAB100C26216 /* SignupViewController.swift in Sources */,
+				0B514C8222B4731D00360139 /* FirebaseManager.swift in Sources */,
+				0B514C8422B4755B00360139 /* AuthenticationManager.swift in Sources */,
 				7F9A7CAA22B1AAB100C26216 /* AppDelegate.swift in Sources */,
 				0B514C8022B4723F00360139 /* Coordinate.swift in Sources */,
+				0B514C8622B4757600360139 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
