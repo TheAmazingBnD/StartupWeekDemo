@@ -65,7 +65,7 @@ class ReminderDetailViewController: UITableViewController {
             completeButton.backgroundColor = #colorLiteral(red: 0.5807225108, green: 0.066734083, blue: 0, alpha: 1)
         }
         else {
-            completeButton.setTitle("Mark As Done", for: .normal)
+            completeButton.setTitle("Mark As Complete", for: .normal)
             completeButton.backgroundColor = #colorLiteral(red: 0.3084011078, green: 0.5618229508, blue: 0, alpha: 1)
         }
     }

@@ -16,6 +16,7 @@
 		0B514C8C22B5633600360139 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8B22B5633600360139 /* UIViewControllerExtensions.swift */; };
 		0B514C8E22B565D500360139 /* RemindersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8D22B565D500360139 /* RemindersViewController.swift */; };
 		0B514C9022B5689A00360139 /* ReminderDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C8F22B5689A00360139 /* ReminderDetailViewController.swift */; };
+		0B514C9622B59FD200360139 /* ReminderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B514C9522B59FD200360139 /* ReminderTableViewCell.swift */; };
 		4A0BA38DB90E1E8AAE4CD949 /* Pods_ToDo_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFC0D430114E4247E2FAE259 /* Pods_ToDo_App.framework */; };
 		7F9A7CAA22B1AAB100C26216 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A7CA922B1AAB100C26216 /* AppDelegate.swift */; };
 		7F9A7CAF22B1AAB100C26216 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F9A7CAD22B1AAB100C26216 /* Main.storyboard */; };
@@ -35,6 +36,7 @@
 		0B514C8B22B5633600360139 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		0B514C8D22B565D500360139 /* RemindersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersViewController.swift; sourceTree = "<group>"; };
 		0B514C8F22B5689A00360139 /* ReminderDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderDetailViewController.swift; sourceTree = "<group>"; };
+		0B514C9522B59FD200360139 /* ReminderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderTableViewCell.swift; sourceTree = "<group>"; };
 		7F9A7CA622B1AAB100C26216 /* ToDo App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ToDo App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F9A7CA922B1AAB100C26216 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7F9A7CAE22B1AAB100C26216 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				7F9A7CAD22B1AAB100C26216 /* Main.storyboard */,
+				0B514C9522B59FD200360139 /* ReminderTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				7F9A7CAA22B1AAB100C26216 /* AppDelegate.swift in Sources */,
 				0B514C8E22B565D500360139 /* RemindersViewController.swift in Sources */,
 				0B514C8C22B5633600360139 /* UIViewControllerExtensions.swift in Sources */,
+				0B514C9622B59FD200360139 /* ReminderTableViewCell.swift in Sources */,
 				0B514C8A22B5612800360139 /* LoginViewController.swift in Sources */,
 				0B514C8822B4C1C600360139 /* SignUpViewController.swift in Sources */,
 				0B514C8622B4757600360139 /* User.swift in Sources */,

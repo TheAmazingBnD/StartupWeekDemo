@@ -56,8 +56,13 @@ extension RemindersViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = reminders[indexPath.row].title
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ReminderTableViewCell else {
+            return UITableViewCell()
+        }
+        
+        let reminder = reminders[indexPath.row]
+        cell.reminder = reminder
+        
         return cell
     }
     
