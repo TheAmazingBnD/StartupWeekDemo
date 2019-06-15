@@ -396,7 +396,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C93K8PCL9Z;
-				INFOPLIST_FILE = "ToDo App/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/ToDo App/SupportingFiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -415,7 +415,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C93K8PCL9Z;
-				INFOPLIST_FILE = "ToDo App/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/ToDo App/SupportingFiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
