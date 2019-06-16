@@ -15,6 +15,9 @@ The project we have decided to create is a simple reminder application. Througho
      - [Installing CocoaPods](#cocoapodsInstallation)
      - [Importing Firebase Into Our Project](#importFirebase)
      - [Configuring Firebase Into Our App](#firebaseConfig)
+4. [Authenticating Users With Firebase](#authentication)
+     - [Creating A New User](#createUser)
+     - [Logging In With An Existing User](#login)
 
 <a name="newProject"> Creating A New Xcode Project </a>
 --------------
@@ -67,7 +70,7 @@ Save the file and back in `Terminal` run `pod install`, this will generate a `.x
 ### <a name="firebaseConfig"> Configuring Firebase Into Our App </a>
 
 Now we will need to configure a FirebaseApp shared instance. Open up `AppDelegate.swift` and update the code to look like so: 
-```
+```swift
 import UIKit
 import Firebase
 
@@ -86,3 +89,113 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 You're now ready to code!
 
+<a name="authentication"> Authenticating Users With Firebase </a>
+--------------
+
+### <a name="createUser"> Creating A New User </a>
+
+The first thing we will need to do is create a `User` [model](https://cocoacasts.com/model-view-viewmodel-in-swift) to do so create a new file name `User.swift` and add the following code to the file.
+
+```swift
+struct User: Equatable {
+    var uid: String?
+    var email: String?
+    var firstName: String?
+    var lastName: String?
+}
+```
+
+If we wanted to we could hold a reference to the user that will persist inbetween app launches like so
+
+```swift
+extension User {
+    func saveToDefaults() {
+        UserDefaults.standard.set(self.uid, forKey: "me")
+    }
+}
+```
+
+The code below is a wrapper used to create a new user. In this project this codes lives in `AuthenticationManager.swift` which is a [Singleton](https://medium.com/if-let-swift-programming/the-swift-singleton-pattern-442124479b19) that handles/manage all functions and members related to authentication.
+
+```swift
+    func signUp(with email: String?, password: String?, firstName: String, lastName: String, completion: @escaping (User?, Error?) -> ()) {
+        /// unwrap email and password
+        guard let email = email,
+            let password = password else {
+                return
+        }
+        
+        /// Create a new Firebase user using email and password
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
+            if let err = error {
+                print("Error Signing In: \(err.localizedDescription)")
+                completion(nil, err)
+                return
+            }
+            
+            guard let result = result else {
+                print("Error Signing In No User Data")
+                completion(nil, nil)
+                return
+            }
+            
+            let user = User(uid: result.user.uid, email: email, firstName: firstName, lastName: lastName)
+                       
+            /// save reference of user to UserDefaults           
+            user?.saveToDefaults()
+            
+            /// set shared instance user to newly created user
+            self?.user = user
+            completion(user, nil)
+        }
+    }
+```
+The snippet above is a function that takes in 4 strings, one for an email, password, first name, and last name. It also takes in a [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4).
+
+So if we have a valid email, and password we use the Firebase `Auth.auth().createUser(withEmail:,password:,completion:)` method, within the callback of the `createUser` method we check to see if an error was return. If there was an error we pass it along to our completion handler. Otherwise we unwrap the result, create a user with that result and pass the user to our completion handler instead.
+
+### <a name="login"> Logging In With An Existing User </a>
+
+Logging in with an existing user is pretty similar to creating a new user. The code below is a wrapper for logging in an existing user
+
+```swift
+func login(with email: String?, password: String?, completion: @escaping (User?, Error?) -> ()) {
+        /// unwrap email and password
+        guard let email = email,
+            let password = password else {
+                return
+        }
+        
+        /// Sign in with an existing Firebase user using email and password
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+            if let err = error {
+                print("Error Signing In: \(err.localizedDescription)")
+                completion(nil, err)
+                return
+            }
+            
+            guard let result = result else {
+                print("Error Signing In No User Data")
+                completion(nil, nil)
+                return
+            }
+            
+            /// Fetch the user data that is save in the database
+            DatabaseManager.shared.fetchUser(with: result.user.uid, completion: { [weak self] user, error in
+                if let err = error {
+                    completion(nil, err)
+                    return
+                }
+                
+                /// save reference of user to UserDefaults
+                user?.saveToDefaults()
+                
+                /// set shared instance user to newly created user
+                self?.user = user
+                completion(user, nil)
+            })
+        }
+    }
+```
+
+As you can see the format is exactly the same the only difference here is that instead of sending up first and last name data we must now fetch that data. We can do so by using the [`DatabaseManager.fetchUser(with:completion:)`](#fetchUser)
