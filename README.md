@@ -18,6 +18,11 @@ The project we have decided to create is a simple reminder application. Througho
 4. [Authenticating Users With Firebase](#authentication)
      - [Creating A New User](#createUser)
      - [Logging In With An Existing User](#login)
+5. [Interacting With The Firebase Database](#database)
+     - [Writing A User To The Database](#savingUser)
+     - [Reading In A User From The Database](#fetchingUser)
+     
+     
 
 <a name="newProject"> Creating A New Xcode Project </a>
 --------------
@@ -199,3 +204,98 @@ func login(with email: String?, password: String?, completion: @escaping (User?,
 ```
 
 As you can see the format is exactly the same the only difference here is that instead of sending up first and last name data we must now fetch that data. We can do so by using the [`DatabaseManager.fetchUser(with:completion:)`](#fetchUser)
+
+<a name="database"> Interacting With The Firebase Database </a> 
+--------------
+
+All methods and members relating to the database are on the `DatabaseManager` [Singleton](https://medium.com/if-let-swift-programming/the-swift-singleton-pattern-442124479b19) class. We will need to key into specific nodes of our database to extract specific data so we will create an [`enum`](https://medium.com/@abhimuralidharan/enums-in-swift-9d792b728835) that looks like so
+
+```swift
+enum Nodes: String {
+    case users = "Users"
+    case reminders = "Reminders"
+}
+```
+we will be using this `enum` to key into our uppermost level nodes.
+
+Now we need to set up the database in our Firebase console. In the side menu on the left select the `Database` option. There are two database options in Firebase `Cloud Firestore` and `Realtime Database`, in this project we are using the `Realtime Database` so make sure when you create your database that you are using the `Realtime Database option`. I would also recommend to choose `Start in test mode`, but it's not mandataory since we are authenticating our users.
+ 
+### <a name="savingUser"> Writing A User To The Database </a>
+
+When [creating a new user](#createUser) we will want write that user to our database. We can leverage the Firebase `Database.database().setValue(_:)` method to send up the necessary values. We can't simply send up our models we will need to map our `User` to a [`Dictionary<String, Any>`](https://www.tutorialspoint.com/swift/swift_dictionaries.htm) so that we can properly write our user to the database. To do so we can create this helper on user
+
+```swift
+extension User {
+    func toDictionary() -> [String : Any] {
+        return ["email" : email ?? "",
+                "firstName" : firstName ?? "",
+                "lastName" : lastName ?? ""]
+    }
+}
+```
+
+Now that we have a way to convert our User [model](https://cocoacasts.com/model-view-viewmodel-in-swift) to a [`Dictionary<String, Any>`]((https://www.tutorialspoint.com/swift/swift_dictionaries.htm)) we can now see how we will save our user to that database, but before we look at the code lets consider how we want the data to be structed in our database.
+
+We will need a node to hold reference of where all of our users are stored. Next we will need a way to identify each individual user; we can use a unique identifer for this. And lastly we will need to save the user information. Base on this criteria our data should look like so:
+
+![Screen Shot 2019-06-16 at 6 08 03 PM](https://user-images.githubusercontent.com/22037563/59570162-d9188100-9061-11e9-87d7-fd57f1fd2b01.png)
+
+
+Now lets look at the code needed to write our user up to the database while maintaining the structure above
+
+```swift
+    func putUser(user: User?) {
+        guard let user = user,
+            let uid = user.uid else {
+            return
+        }
+        
+        Database.database().reference().child(Nodes.users.rawValue).child(uid).setValue(user.toDictionary())
+    }
+```
+This function calls into `Database.database().reference()` which is defined in the `GoogleService-Info.plist` file we imported earlier. Next we will key into the `Users` node  by using `.child(Nodes.users.rawValue)` (`Nodes.users.rawValue` is the same as saying `"Users"`), followed by keying into the users unique id node using `.child(uid)` and set the value using our [`Dictionary<String, Any>`](https://www.tutorialspoint.com/swift/swift_dictionaries.htm) representation.
+
+### <a name="fetchingUser"> Reading In A User From The Database </a>
+
+When reading in a value from the database using any of the FireBase `Database.database().observe(of:with:)` methods use a [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4) in which the callback returns a Firebase `DataSnapshot`, so we will need to a way to transform the `Datasnapshot` into our user model. We can do somthin similar to the following:
+
+```swift
+extension DataSnapshot {
+    func toUser() -> User? {
+        /// cast value to Dictionary<String, Any>
+        guard let dict = value as? [String : Any] else {
+            return nil
+        }
+        
+        /// grab values from the dictionary
+        let email = dict["email"] as? String
+        let firstName = dict["firstName"] as? String
+        let lastName = dict["lastName"] as? String
+        
+        /// create and return a new instance of User
+        return User(uid: key,
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName)
+    }
+}
+```
+
+Now that we have a way of transforming `DataSnapshot` into a `User` we can now take a look and see how we can leverage `Database.database().observe(of:with:)` and the newly add `DataSnapshot.toUser()`functions to fetch a user from the database.
+
+```swift
+    func fetchUser(with uid: String?, completion: @escaping (User?, Error?) -> ()) {
+        guard let uid = uid else {
+            completion(nil, nil)
+            return
+        }
+        
+        Database.database().reference().child(Nodes.users.rawValue).child(uid).observeSingleEvent(of: .value, with: { snapshot in
+            completion(snapshot.toUser(), nil)
+        }) { error in
+            completion(nil, error)
+        }
+    }
+```
+
+This method takes in a string representing the users unique id and a [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4). This function calls into `Database.database().reference()`. Next we will key into the `Users` node  by using `.child(Nodes.users.rawValue)`, followed by keying into the users unique id node using `.child(uid)` and use the Firebase `Database.database().observeSingleEvent(of:with:withCancel:)` method to read in the values for a user. 
