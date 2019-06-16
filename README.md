@@ -21,7 +21,7 @@ The project we have decided to create is a simple reminder application. Througho
 5. [Interacting With The Firebase Database](#database)
      - [Writing A User To The Database](#savingUser)
      - [Reading In A User From The Database](#fetchingUser)
-     
+     - [Writing A Reminder To The Database](#savingReminder)
      
 
 <a name="newProject"> Creating A New Xcode Project </a>
@@ -244,16 +244,18 @@ We will need a node to hold reference of where all of our users are stored. Next
 Now lets look at the code needed to write our user up to the database while maintaining the structure above
 
 ```swift
-    func putUser(user: User?) {
+    func putUser(user: User?, completion: @escaping (Error?) -> ()) {
         guard let user = user,
             let uid = user.uid else {
             return
         }
         
-        Database.database().reference().child(Nodes.users.rawValue).child(uid).setValue(user.toDictionary())
+        Database.database().reference().child(Nodes.users.rawValue).child(uid).setValue(user.toDictionary()) { (error, _) in
+            completion(error)
+        }
     }
 ```
-This function calls into `Database.database().reference()` which is defined in the `GoogleService-Info.plist` file we imported earlier. Next we will key into the `Users` node  by using `.child(Nodes.users.rawValue)` (`Nodes.users.rawValue` is the same as saying `"Users"`), followed by keying into the users unique id node using `.child(uid)` and set the value using our [`Dictionary<String, Any>`](https://www.tutorialspoint.com/swift/swift_dictionaries.htm) representation.
+This function calls into `Database.database().reference()` which is defined in the `GoogleService-Info.plist` file we imported earlier. Next we will key into the `Users` node  by using `.child(Nodes.users.rawValue)` (`Nodes.users.rawValue` is the same as saying `"Users"`), followed by keying into the users unique id node using `.child(uid)` and set the value using our [`Dictionary<String, Any>`](https://www.tutorialspoint.com/swift/swift_dictionaries.htm) representation. If an error is return then we will just pass it into our [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4).
 
 ### <a name="fetchingUser"> Reading In A User From The Database </a>
 
@@ -299,3 +301,56 @@ Now that we have a way of transforming `DataSnapshot` into a `User` we can now t
 ```
 
 This method takes in a string representing the users unique id and a [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4). This function calls into `Database.database().reference()`. Next we will key into the `Users` node  by using `.child(Nodes.users.rawValue)`, followed by keying into the users unique id node using `.child(uid)` and use the Firebase `Database.database().observeSingleEvent(of:with:withCancel:)` method to read in the values for a user. 
+
+### <a name="savingReminder"> Writing A Reminder To The Database </a>
+
+Before we can write a `Reminder` reminder we must first create the corresponding data type. Create a new file and name it `Reminder.swift` and add the following code to the new file.
+
+```swift
+struct Reminder: Equatable {
+    var id: String
+    var title: String?
+    var description: String?
+    var timestamp: TimeInterval
+    var isComplete: Bool
+}
+```
+You may be wondering what the `timestamp` and member is for. When we are fetching our data from Firebase it comes back asynchronously which essentially means that the data that comes back may not be in the same order as it was before, so we can use the timestamp member to sort the data based on the most recent reminder add
+
+Now that we have our [model](https://cocoacasts.com/model-view-viewmodel-in-swift) setup we will need a way to cast this to a [`Dictionary<String, Any>`](https://www.tutorialspoint.com/swift/swift_dictionaries.htm). So we can use the following helper function to achieve this.
+
+```swift
+extension Reminder {
+    func toDictionary() -> [String : Any] {
+        return ["title" : title ?? "",
+                "description" : description ?? "",
+                "timestamp" : timestamp,
+                "isComplete" : isComplete]
+    }
+}
+```
+
+Before we write the code for this lets take a step back and think about how we want this data to be structured in our database. We will have a top level node called "Reminders". Now each user will have their own list of reminders so we can create another node keyed by the user's unique identifier. Each reminder will need it's own node so we can achieve keying the node by the reminder's id, and finally we can set the reminders data. This should look like so
+
+![Screen Shot 2019-06-16 at 7 33 52 PM](https://user-images.githubusercontent.com/22037563/59570971-b2f8de00-906d-11e9-892e-d3e1c653bdf3.png)
+
+Let's see how this will look in code 
+
+```swift
+    func putReminder(reminder: Reminder?, title: String, description: String?, completion: @escaping (Error?) -> ()) {
+        guard let uid = AuthenticationManager.shared.user?.uid else {
+            return
+        }
+        
+        let uuid = reminder?.id ?? UUID().uuidString
+        let timestamp = reminder?.timestamp ?? Date().timeIntervalSince1970
+        let isComplete = reminder?.isComplete ?? false
+        let reminder = Reminder(id: uuid, title: title, description: description, timestamp: timestamp, isComplete: isComplete)
+        
+        Database.database().reference().child(Nodes.reminders.rawValue).child(uid).child(uuid).setValue(reminder.toDictionary()) { (error, reference) in
+            completion(error)
+        }
+    }
+```
+
+This method takes in an [optional](https://medium.com/@agoiabeladeyemi/optionals-in-swift-2b141f12f870) `Reminder`, 2 strings, and a [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4). We check to see if the current user is authenticated, then if the reminder passed in is not `nil` we can update the `title`, `description`, and `isComplete` members of the reminder. Otherwise we create a new uniquer identifier (`UUID`), set the timestamp to a the number of seconds that have passed since 1970, and set isComplete to false. We then key into the `Reminders` node of the database, next we key into the node corresponding to the current users uid, and then the node corresponding to the new reminders id; we then set the reminders values. If an error is return then we will just pass it into our [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4).
