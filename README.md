@@ -22,7 +22,8 @@ The project we have decided to create is a simple reminder application. Througho
      - [Writing A User To The Database](#savingUser)
      - [Reading In A User From The Database](#fetchingUser)
      - [Writing A Reminder To The Database](#savingReminder)
-     
+     - [Reading In A List Of Reminders From The Database](#readingReminders)
+6. [Conclusion](#conclusion)
 
 <a name="newProject"> Creating A New Xcode Project </a>
 --------------
@@ -283,7 +284,7 @@ extension DataSnapshot {
 }
 ```
 
-Now that we have a way of transforming `DataSnapshot` into a `User` we can now take a look and see how we can leverage `Database.database().observe(of:with:)` and the newly add `DataSnapshot.toUser()`functions to fetch a user from the database.
+Now that we have a way of transforming `DataSnapshot` into a `User` we can now take a look and see how we can leverage `Database.database().observe(of:with:)` and the newly add `DataSnapshot.toUser()` functions to fetch a user from the database.
 
 ```swift
     func fetchUser(with uid: String?, completion: @escaping (User?, Error?) -> ()) {
@@ -354,3 +355,68 @@ Let's see how this will look in code
 ```
 
 This method takes in an [optional](https://medium.com/@agoiabeladeyemi/optionals-in-swift-2b141f12f870) `Reminder`, 2 strings, and a [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4). We check to see if the current user is authenticated, then if the reminder passed in is not `nil` we can update the `title`, `description`, and `isComplete` members of the reminder. Otherwise we create a new uniquer identifier (`UUID`), set the timestamp to a the number of seconds that have passed since 1970, and set isComplete to false. We then key into the `Reminders` node of the database, next we key into the node corresponding to the current users uid, and then the node corresponding to the new reminders id; we then set the reminders values. If an error is return then we will just pass it into our [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4).
+
+### <a name="readingReminders"> Reading In A List Of Reminders From The Database </a>
+
+Before we can read in reminders we must handle transforming a `DataSnapshot` into a `Reminder` this will differ from the way we pull in a `User`. The reason being is that we are going to key in the current users uid node that is nested inside the "Reminders" node, meaning that there are potentially more node inside (a.k.a children). But first we need to be able to transform a `DataSnapshot` into a `Reminder`
+
+```swift
+extension DataSnapshot {
+    func toReminder() -> Reminder? {
+        guard let dict = self.value as? [String : Any] else {
+            return nil
+        }
+        
+        let title = dict["title"] as? String
+        let description = dict["description"] as? String
+        let timestamp = dict["timestamp"] as? TimeInterval ?? Date().timeIntervalSince1970
+        let isComplete = dict["isComplete"] as? Bool ?? false
+        
+        return Reminder(id: key,
+                        title: title,
+                        description: description,
+                        timestamp: timestamp,
+                        isComplete: isComplete)
+    }
+}
+```
+
+Now that we have our transformer set up, lets see how to read these in and parse these children from the database
+
+```swift
+    func fetchCurrentUserReminders(completion: @escaping ([Reminder]?, Error?) -> ()) {
+        guard let uid = AuthenticationManager.shared.user?.uid else {
+            return
+        }
+        
+        Database.database().reference().child(Nodes.reminders.rawValue).child(uid).observeSingleEvent(of: .value, with: { snapshot in
+            guard let children = snapshot.children.allObjects as? [DataSnapshot] else {
+                return
+            }
+            
+            var reminders = [Reminder]()
+            
+            for child in children {
+                guard let reminder = child.toReminder() else {
+                    continue
+                }
+                reminders.append(reminder)
+            }
+            
+            reminders = reminders.sorted(by: { lhs, rhs -> Bool in
+                return lhs.timestamp > rhs.timestamp
+            })
+            
+            completion(reminders, nil)
+        }) { error in
+            completion(nil, error)
+        }
+    }
+```
+
+So first we check to see if the current user is authenicated. Then we key into the "Reminders" node of the database, followed by keying into node corresponding to the users uid. We can now leverage the Firebase `Database.database().observeSingEvent(of:with:withCancel:)` method to read in all the users reminders. So we cast our `snapshot.children.allObjects` to an [array](https://www.tutorialspoint.com/swift/swift_arrays.htm) to an array of `DataSnapshot`. We can now [iterate](https://www.hackingwithswift.com/articles/76/how-to-loop-over-arrays) over that array and append each instance of transformed instance of `Reminder` to our `Reminders` [array](https://www.tutorialspoint.com/swift/swift_arrays.htm) but before we can pass this into our [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4) we must sort the array base on `timestamp` we can do so by using the [`Array.sorted(by:)`](https://developer.apple.com/documentation/swift/array/2296815-sorted) method. If an error is return then we will just pass it into our [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4).
+
+<a name="conclusion"> Conclusion </a>
+--------------
+
+To see how all these components all come together I encourage you to explore through the project! You have learned how to authenticate users using Firebase, and edit/write/read data using the FireBase `Realtime Database`. Using these concepts you create and support your own custom applications, and we are excited to see what you come up with; thanks for reading and I hope this helps you and your startup!
