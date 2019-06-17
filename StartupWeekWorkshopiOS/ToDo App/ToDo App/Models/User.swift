@@ -29,16 +29,19 @@ extension User {
 }
 
 extension DataSnapshot {
-    func toUser(with uid: String) -> User? {
-        guard let dict = self.value as? [String : Any] else {
+    func toUser() -> User? {
+        /// cast value to Dictionary<String, Any>
+        guard let dict = value as? [String : Any] else {
             return nil
         }
         
+        /// grab values from the dictionary
         let email = dict["email"] as? String
         let firstName = dict["firstName"] as? String
         let lastName = dict["lastName"] as? String
         
-        return User(uid: uid,
+        /// create and return a new instance of User
+        return User(uid: key,
                     email: email,
                     firstName: firstName,
                     lastName: lastName)

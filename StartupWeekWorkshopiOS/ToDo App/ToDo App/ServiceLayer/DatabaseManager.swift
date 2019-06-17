@@ -22,13 +22,15 @@ class DatabaseManager {
     // we make this private so that no other class can create an instance of this class
     private init() {}
     
-    func putUser(user: User?) {
+    func putUser(user: User?, completion: @escaping (Error?) -> ()) {
         guard let user = user,
             let uid = user.uid else {
             return
         }
         
-        Database.database().reference().child(Nodes.users.rawValue).child(uid).setValue(user.toDictionary())
+        Database.database().reference().child(Nodes.users.rawValue).child(uid).setValue(user.toDictionary()) { (error, _) in
+            completion(error)
+        }
     }
     
     func fetchUser(with uid: String?, completion: @escaping (User?, Error?) -> ()) {
@@ -38,7 +40,7 @@ class DatabaseManager {
         }
         
         Database.database().reference().child(Nodes.users.rawValue).child(uid).observeSingleEvent(of: .value, with: { snapshot in
-            completion(snapshot.toUser(with: uid), nil)
+            completion(snapshot.toUser(), nil)
         }) { error in
             completion(nil, error)
         }
@@ -71,12 +73,11 @@ class DatabaseManager {
     }
     
     func fetchCurrentUserReminders(completion: @escaping ([Reminder]?, Error?) -> ()) {
-
         guard let uid = AuthenticationManager.shared.user?.uid else {
             return
         }
         
-        Database.database().reference().child(Nodes.reminders.rawValue).child(uid).observe(.value, with: { snapshot in
+        Database.database().reference().child(Nodes.reminders.rawValue).child(uid).observeSingleEvent(of: .value, with: { snapshot in
             guard let children = snapshot.children.allObjects as? [DataSnapshot] else {
                 return
             }
@@ -84,7 +85,7 @@ class DatabaseManager {
             var reminders = [Reminder]()
             
             for child in children {
-                guard let reminder = child.toReminder(with: child.key) else {
+                guard let reminder = child.toReminder() else {
                     continue
                 }
                 reminders.append(reminder)
@@ -98,6 +99,5 @@ class DatabaseManager {
         }) { error in
             completion(nil, error)
         }
-        
     }
 }

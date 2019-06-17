@@ -25,7 +25,11 @@ class SignUpViewController: UITableViewController {
                                                     return
                                                 }
 
-                                                DatabaseManager.shared.putUser(user: user)
+                                                DatabaseManager.shared.putUser(user: user, completion: { [weak self] error in
+                                                    if let err = error {
+                                                        self?.presentAlert(for: err, title: "Unable To Sign In")
+                                                    }
+                                                })
                                                 self?.dismiss(animated: true, completion: nil)
         }
     }

@@ -16,11 +16,13 @@ class AuthenticationManager {
     private(set) var user: User?
     
     func signUp(with email: String?, password: String?, firstName: String, lastName: String, completion: @escaping (User?, Error?) -> ()) {
+        /// unwrap email and password
         guard let email = email,
             let password = password else {
                 return
         }
         
+        /// Create a new Firebase user using email and password
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
             if let err = error {
                 print("Error Signing In: \(err.localizedDescription)")
@@ -34,22 +36,25 @@ class AuthenticationManager {
                 return
             }
             
-            let user = self?.createUser(with: result.user.uid,
-                                        email: email,
-                                        firstName: firstName,
-                                        lastName: lastName)
-            user?.saveToDefaults()
+            let user = User(uid: result.user.uid, email: email, firstName: firstName, lastName: lastName)
+            
+            /// save reference of user to UserDefaults
+            user.saveToDefaults()
+            
+            /// set shared instance user to newly created user
             self?.user = user
             completion(user, nil)
         }
     }
     
     func login(with email: String?, password: String?, completion: @escaping (User?, Error?) -> ()) {
+        /// unwrap email and password
         guard let email = email,
             let password = password else {
                 return
         }
         
+        /// Sign in with an existing Firebase user using email and password
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
             if let err = error {
                 print("Error Signing In: \(err.localizedDescription)")
@@ -63,13 +68,17 @@ class AuthenticationManager {
                 return
             }
             
+            /// Fetch the user data that is save in the database
             DatabaseManager.shared.fetchUser(with: result.user.uid, completion: { [weak self] user, error in
                 if let err = error {
                     completion(nil, err)
                     return
                 }
                 
+                /// save reference of user to UserDefaults
                 user?.saveToDefaults()
+                
+                /// set shared instance user to newly created user
                 self?.user = user
                 completion(user, nil)
             })
@@ -86,10 +95,4 @@ class AuthenticationManager {
             completion(user, error)
         }
     }
-    
-    private func createUser(with uid: String, email: String, firstName: String, lastName: String) -> User {
-        let user = User(uid: uid, email: email, firstName: firstName, lastName: lastName)
-        return user
-    }
-    
 }

@@ -27,7 +27,7 @@ extension Reminder {
 }
 
 extension DataSnapshot {
-    func toReminder(with id: String) -> Reminder? {
+    func toReminder() -> Reminder? {
         guard let dict = self.value as? [String : Any] else {
             return nil
         }
@@ -37,7 +37,7 @@ extension DataSnapshot {
         let timestamp = dict["timestamp"] as? TimeInterval ?? Date().timeIntervalSince1970
         let isComplete = dict["isComplete"] as? Bool ?? false
         
-        return Reminder(id: id,
+        return Reminder(id: key,
                         title: title,
                         description: description,
                         timestamp: timestamp,
