@@ -1,17 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/loginContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/mainActivity"
         android:background="#ffffff"
+        android:clickable="true"
+        android:focusable="true"
         tools:context=".MainActivity">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
@@ -25,12 +22,27 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:title="Detroit Android"
+                android:title="Login"
                 android:elevation="4dp"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
         />
     </com.google.android.material.appbar.AppBarLayout>
+
+
+    <ProgressBar
+            android:id="@+id/loginProgressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/circular_progress_bar"
+            android:layout_centerHorizontal="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+    />
 
     <TextView
             android:id="@+id/welcomeTV"
@@ -45,36 +57,46 @@
             android:typeface="serif"
             android:text="Welcome To Detroit Startup Week!"
             app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-            app:layout_constraintBottom_toTopOf="@id/signUpButtonMain"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
     />
 
+    <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/loginEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="16dp"
+            android:hint="Email"
+            app:layout_constraintTop_toBottomOf="@id/welcomeTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+    />
+
+    <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/loginPassword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="16dp"
+            android:maxLines="1"
+            android:inputType="textPassword"
+            android:hint="Password"
+            app:layout_constraintTop_toBottomOf="@id/loginEmail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+    />
+
     <Button
-            android:id="@+id/signUpButtonMain"
+            android:id="@+id/loginButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="2dp"
             android:layout_margin="@dimen/fab_margin"
-            android:text="Sign Up"
+            android:text="Login"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/mainLoginTV"
-    />
-
-    <TextView
-            android:id="@+id/mainLoginTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_margin="24dp"
-            android:textSize="14sp"
-            android:padding="10dp"
-            android:text="Or Login"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
     />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
