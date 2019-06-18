@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1002692123132-kki19uv1o69qpptm27a88siqt5789tp8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1002692123132-kki19uv1o69qpptm27a88siqt5789tp8</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAaAKgMu21-Jq4E9tAbbk4qFYTo8BiQD6M</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1002692123132</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.erik.ToDo-App</string>
+	<key>PROJECT_ID</key>
+	<string>startup-week-workshop</string>
+	<key>STORAGE_BUCKET</key>
+	<string>startup-week-workshop.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1002692123132:ios:8c4f3dfbd2a220b3</string>
+	<key>DATABASE_URL</key>
+	<string>https://startup-week-workshop.firebaseio.com</string>
+</dict>
+</plist>
