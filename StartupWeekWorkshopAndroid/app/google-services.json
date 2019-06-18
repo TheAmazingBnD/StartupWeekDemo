@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1002692123132",
+    "firebase_url": "https://startup-week-workshop.firebaseio.com",
+    "project_id": "startup-week-workshop",
+    "storage_bucket": "startup-week-workshop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002692123132:android:62e2d6d117e20be5",
+        "android_client_info": {
+          "package_name": "com.detroitmeets.startupweekworkshopandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1002692123132-qjdnseg1jcqrlkbnhkq8dmo5jno5v8mb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZEuSpHVS0kQOBW1zjE6cP697d81nt9Tk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1002692123132-qjdnseg1jcqrlkbnhkq8dmo5jno5v8mb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

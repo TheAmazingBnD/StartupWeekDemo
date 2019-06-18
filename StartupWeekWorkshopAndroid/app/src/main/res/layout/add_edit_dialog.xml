@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/addOrEditContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:clickable="true"
+        android:focusable="true"
+        tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:layout_constraintTop_toTopOf="parent"
+    >
+
+        <Toolbar
+                android:id="@+id/editToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:title="Create Reminder"
+                android:elevation="4dp"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+        />
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <ProgressBar
+            android:id="@+id/editProgressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/circular_progress_bar"
+            android:layout_centerHorizontal="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+    />
+
+    <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/dialogTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="16dp"
+            android:textSize="28dp"
+            android:maxLines="1"
+            android:hint="Title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/dialogDescription"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+    />
+
+    <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/dialogDescription"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="10dp"
+            android:layout_margin="16dp"
+            android:textSize="18sp"
+            android:gravity="start"
+            android:hint="Description of your reminder"
+            app:layout_constraintTop_toBottomOf="@id/dialogTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/dialogTimestamp"
+            app:layout_constraintEnd_toEndOf="parent"
+    />
+
+    <TextView
+            android:id="@+id/dialogTimestamp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="12dp"
+            android:text="Jun 19, 2019 1:50PM"
+            android:visibility="gone"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dialogDescription"
+            app:layout_constraintBottom_toTopOf="@id/deleteReminder"
+    />
+
+    <TextView
+            android:id="@+id/statusButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="12dp"
+            android:text="In Progress"
+            android:textColor="@color/redDark"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/dialogDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/dialogTimestamp"
+            app:layout_constraintBottom_toTopOf="@id/deleteReminder"
+    />
+
+    <Button
+            android:id="@+id/deleteReminder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal"
+            android:text="Delete Reminder"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/dialogTimestamp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/confirmButton"
+    />
+
+    <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal"
+            android:text="cancel"
+            app:layout_constraintTop_toBottomOf="@id/deleteReminder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/confirmButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+    />
+
+    <Button
+            android:id="@+id/confirmButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal"
+            android:text="Confirm"
+            app:layout_constraintTop_toBottomOf="@id/deleteReminder"
+            app:layout_constraintStart_toEndOf="@id/cancelButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
