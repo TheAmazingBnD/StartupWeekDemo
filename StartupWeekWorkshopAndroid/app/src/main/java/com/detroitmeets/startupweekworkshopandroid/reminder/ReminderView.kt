@@ -80,8 +80,8 @@ class ReminderView : Fragment() {
     private fun render(viewState: ReminderViewModel.ReminderViewState) {
         when (viewState.progressType) {
             ProgressType.NotAsked -> renderNotAsked()
-            ProgressType.Loading -> renderLoading()
-            ProgressType.Result -> renderResult()
+            ProgressType.Loading -> {}
+            ProgressType.Result -> {}
             ProgressType.Failure -> renderFailure()
         }
     }
@@ -109,18 +109,6 @@ class ReminderView : Fragment() {
         view!!,
         getString(R.string.add_delete_edit),
         Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
-
-    private fun renderLoading() =
-        Snackbar.make(
-            view!!,
-            getString(R.string.please_wait),
-            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
-
-    private fun renderResult() =
-        Snackbar.make(
-            view!!,
-            getString(R.string.complete),
-            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
 
     private fun renderFailure() =
         Snackbar.make(

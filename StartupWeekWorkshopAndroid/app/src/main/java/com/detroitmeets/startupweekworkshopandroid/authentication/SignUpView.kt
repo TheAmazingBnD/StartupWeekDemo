@@ -42,7 +42,7 @@ class SignUpView : Fragment() {
         }
 
         confirmSignUpButton.setOnClickListener {
-            viewModel.postSignUp(
+            viewModel.createNewUser(
                 signUpEmail.text.toString(),
                 signUpPassword.text.toString(),
                 signUpFirstName.text.toString(),

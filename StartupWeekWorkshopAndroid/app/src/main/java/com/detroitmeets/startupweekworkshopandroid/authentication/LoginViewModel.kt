@@ -35,7 +35,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun postLogin(email: String, password: String) {
+    fun login(email: String, password: String) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
             updateState(
                 LoginViewState(

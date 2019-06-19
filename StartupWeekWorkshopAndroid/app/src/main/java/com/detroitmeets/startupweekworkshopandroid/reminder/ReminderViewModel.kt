@@ -74,6 +74,8 @@ class ReminderViewModel : ViewModel() {
                             }
                         }
 
+                        reminders.sortBy { it.timestamp }
+
                         updateState(
                             ReminderViewState(
                                 progressType = ProgressType.Result,
@@ -262,19 +264,6 @@ class ReminderViewModel : ViewModel() {
         }
     }
 
-    private fun updateState(newState: ReminderViewState) {
-        viewState.value = currentViewState()
-            .copy(
-                progressType = newState.progressType,
-                isValidated = newState.isValidated,
-                reminders = newState.reminders,
-                markedForDeletion = newState.markedForDeletion,
-                markedForCompletion = newState.markedForCompletion,
-                userUID = newState.userUID
-            )
-    }
-
-
     fun toggleMarkedForDeletion(mark: Boolean) {
         updateState(
             currentViewState().copy(
@@ -301,6 +290,17 @@ class ReminderViewModel : ViewModel() {
         )
     }
 
+    private fun updateState(newState: ReminderViewState) {
+        viewState.value = currentViewState()
+            .copy(
+                progressType = newState.progressType,
+                isValidated = newState.isValidated,
+                reminders = newState.reminders,
+                markedForDeletion = newState.markedForDeletion,
+                markedForCompletion = newState.markedForCompletion,
+                userUID = newState.userUID
+            )
+    }
 
     data class ReminderViewState(
         val progressType: ProgressType,
