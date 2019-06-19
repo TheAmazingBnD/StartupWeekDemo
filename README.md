@@ -416,6 +416,475 @@ Now that we have our transformer set up, lets see how to read these in and parse
 
 So first we check to see if the current user is authenicated. Then we key into the "Reminders" node of the database, followed by keying into node corresponding to the users uid. We can now leverage the Firebase `Database.database().observeSingEvent(of:with:withCancel:)` method to read in all the users reminders. So we cast our `snapshot.children.allObjects` to an [array](https://www.tutorialspoint.com/swift/swift_arrays.htm) to an array of `DataSnapshot`. We can now [iterate](https://www.hackingwithswift.com/articles/76/how-to-loop-over-arrays) over that array and append each instance of transformed instance of `Reminder` to our `Reminders` [array](https://www.tutorialspoint.com/swift/swift_arrays.htm) but before we can pass this into our [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4) we must sort the array base on `timestamp` we can do so by using the [`Array.sorted(by:)`](https://developer.apple.com/documentation/swift/array/2296815-sorted) method. If an error is return then we will just pass it into our [completion handler](https://blog.bobthedeveloper.io/completion-handlers-in-swift-with-bob-6a2a1a854dc4).
 
+
+# Android
+
+## Contents
+
+1. [Creating A New Android Studio Project](#newASProject) 
+2. [Setting Up Firebase](#firebaseSetupAndroid)
+3. [Importing Firebase Into Our Project](#importFirebaseAndroid)
+     - [Configuring Firebase Into Our App](#firebaseConfigAndroid)
+4. [Authenticating Users With Firebase](#authenticationAndroid)
+     - [Creating A New User](#createUserAndroid)
+     - [Logging In With An Existing User](#loginAndroid)
+5. [Interacting With The Firebase Database](#databaseAndroid)
+     - [Writing A User To The Database](#savingUserAndroid)
+     - [Reading In A User From The Database](#fetchingUserAndroid)
+     - [Writing A Reminder To The Database](#savingRemindeAndroidr)
+     - [Reading In A List Of Reminders From The Database](#reading/writingRemindersAndroid)
+6. [Conclusion](#conclusion)
+
+<a name="newASProject"> Creating A New Android Studio Project </a>
+--------------
+If you don't already have Android Studio installed on your computer you can install it from <a href="https://developer.android.com/studio" >Here</a>. Once you open the IDE you will be prompted with the following screen. This workshop will be a demo of MVVM architecture observing changes to data. We will be using Kotlin throughout this workshop. Android Apps _can_ be made in Java but most companies including Google themselves are pushing away from Java.
+
+<img width="500" alt="Screen Shot 2019-06-15 at 8 39 48 PM" src="https://user-images.githubusercontent.com/24880401/59791980-39e1cc80-92a1-11e9-89a5-46611a0b9644.PNG">
+
+Go ahead and click `File -> New ->New Project` and select the `Basic Activity`. You will then be prompted to name your application, and perhaps for an organization name and/or identifier. Tap next and congratulations you just created an Android Studio project!
+
+<a name="firebaseSetupAndroid"> Setting Up Firebase </a>
+--------------
+
+We will want to create a Firbase project before we get too ahead of ourselves. Head over to https://firebase.google.com/ and in the top right hand corner click on the `Go to console` button (You will need to be signed into a google account to access the console). From here we can tap `Create a project`, enter in a name for the project, accept and agree to the `controller-controller` and `applicable` terms and tap `Create project`.
+
+We will now to add an Android app to our project. In the project overview section tap the Android button; here you will be prompted for a bundle identifier. Open Android Studio back up, head over to your App modules `build.gradle`. Here you will see an `applicationId`. Grab that and drop it into Firebase 
+
+Next download the `google-services.json` and drag and drop it into the Android project in `App -> src`. Pop back over to the Firebase console and finish the prompted setup. Congratulations! You have just successfully created a Firebase project and registered your Android app!
+
+### <a name="importFirebaseAndroid"> Importing Firebase Into Our Project </a>
+
+Now to add Firebase to our dependencies. Add this snippet below to your projects `build.gradle`.
+
+```
+dependencies { 
+ classpath 'com.google.gms:google-services:4.2.0' 
+ …
+ }
+```
+
+After this, add the snippet below to your App's `build.gradle` file.
+
+```
+dependencies { 
+...
+implementation 'com.google.firebase:firebase-core:17.0.0' 
+implementation 'com.google.firebase:firebase-auth:18.0.0' 
+implementation 'com.google.android.gms:play-services-auth:17.0.0' 
+implementation 'com.google.firebase:firebase-database:18.0.0' 
+ …
+ }
+ ```
+
+
+### <a name="firebaseConfigAndroid"> Configuring Firebase Into Our App </a>
+
+For simplicity we will create some global instances of the Firebase DB and Firebase Auth. This will keep the amount of
+```kotlin
+val auth = FirebaseAuth.getInstance()
+val db = FirebaseDatabase.getInstance()
+```
+
+You're now ready to code!
+
+<a name="authenticationAndroid"> Authenticating Users With Firebase </a>
+--------------
+
+### <a name="createUserAndroid"> Creating A New User </a>
+
+The first thing we will need to do is create a `User` Model to do so create a new kotlin file named `User` and add the following code to the file.
+
+```kotlin
+data class User ( 
+val uid: String? = "",
+val firstName: String? = "", 
+val lastName: String? = "", 
+val email: String? = "" 
+)
+```
+
+If we wanted to we could hold a reference to the user that will persist between app launches we have to store this `user.uid` in Shared Preferences. Thank can be done by calling the snippet below. I separated this into it's own SharedPrefsManager class to make it easier to save this from other places in the app. For example the Login/Signup screens. The `getString` and `putString` methods are wrapped in functions.
+
+**Storing to Prefs:**
+```kotlin
+
+private var prefs : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+ 
+prefs.getString(SharedPrefsKeys.USER_UID, "").orEmpty() 
+prefs.edit().putString(SharedPrefsKeys.USER_UID, userId).apply()
+
+```
+
+This is what my manager class mentioned looks like. 
+
+**SharedPrefsManager:**
+```kotlin
+open class SharedPrefsManager(activity: Context) { 
+private var prefs : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity) 
+
+fun getCurrentUser() = prefs.getString(SharedPrefsKeys.USER_UID, "").orEmpty() 
+
+fun setCurrentUser(userId: String) { try { prefs.edit().putString(SharedPrefsKeys.USER_UID, userId).apply() } catch (e: Exception) { } } }
+
+```
+
+### <a name="loginAndroid"> Logging In With An Existing User </a>
+
+Logging in with an existing user is pretty similar to creating a new user. The code below is a wrapper for logging in an existing user
+
+```kotlin
+fun login(email: String, password: String) { 
+if (email.isNotEmpty() && password.isNotEmpty()) { 
+updateState(
+ LoginViewState( 
+progressType = ProgressType.Loading, 
+isValidated = currentViewState().isValidated, 
+userUID = currentViewState().userUID 
+) ) 
+
+auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { 
+if (it.isSuccessful) { 
+
+// Assert Non null here because we had a 
+// successful login as per result. **There are better ways** 
+val authUser = auth.currentUser!!
+
+db.reference.child("Users").child(authUser.uid).addListenerForSingleValueEvent( object : ValueEventListener { 
+override fun onDataChange(dataSnapshot: DataSnapshot) { 
+
+val data = dataSnapshot.getValue(User::class.java) 
+
+if(data != null) { 
+user = user?.copy( 
+uid = authUser.uid, 
+email = data.email, 
+firstName = data.firstName, 
+lastName = data.lastName 
+) } 
+
+updateState( 
+LoginViewState( 
+progressType = ProgressType.Result, 
+isValidated = currentViewState().isValidated, 
+userUID = authUser.uid 
+) ) } 
+
+override fun onCancelled(databaseError: DatabaseError) { 
+updateState( 
+LoginViewState( 
+progressType = ProgressType.Failure, 
+isValidated = currentViewState().isValidated, 
+userUID = currentViewState().userUID ) ) } } 
+) } else { 
+updateState( 
+LoginViewState( 
+progressType = ProgressType.Failure, 
+isValidated = currentViewState().isValidated, 
+userUID = currentViewState().userUID ) ) } }
+} else { 
+updateState( 
+LoginViewState( 
+progressType = ProgressType.Failure, 
+isValidated = currentViewState().isValidated, 
+userUID = currentViewState().userUID ) ) } 
+}
+```
+
+As you can see the format is close to the same but here is that instead of sending up first and last name data we must now fetch that data. We can do so by using the [`db.reference.child("Users").child(savedUID)`](#fetchUser)
+
+<a name="databaseAndroid"> Interacting With The Firebase Database </a> 
+--------------
+ 
+### <a name="savingUserAndroid"> Writing A User To The Database </a>
+
+The code below is used to create a new user. In this project this codes lives in `SignUpViewModel.kt` which is a class that will handle the updates and changes to the view. This class will keep track of state and typically network calls are separated out into layers that this class talks to.
+
+**Creating a new User:**
+```kotlin
+    
+fun createNewUser(email: String, password: String, firstName: String, lastName: String) {
+
+if (email.isNotEmpty() && password.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty()) { 
+updateState( 
+SignUpViewState( 
+progressType = ProgressType.Loading,
+isValidated = currentViewState().isValidated )
+)
+
+ auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { 
+if (it.isSuccessful) { 
+
+// Assert Non null here because we had a 
+// successful login as per result. **There are better ways** 
+val user = auth.currentUser!! 
+
+db.reference.child("Users").child(user.uid).setValue( 
+hashMapOf<String, Any>( 
+Pair("email", email), 
+Pair("firstName", firstName), 
+Pair("lastName", lastName) ) 
+) 
+
+updateState( 
+SignUpViewState( 
+progressType = ProgressType.Result, 
+isValidated = currentViewState().isValidated ) 
+)
+} else { 
+updateState( 
+SignUpViewState( 
+progressType = ProgressType.Failure, 
+isValidated = currentViewState().isValidated ) ) }
+}} else { 
+updateState( 
+SignUpViewState( 
+progressType = ProgressType.Failure, 
+isValidated = currentViewState().isValidated ) ) } 
+}
+```
+The snippet above is a function that takes in 4 strings, one for an email, password, first name, and last name.
+
+So if we have a valid email, and password we use the Firebase ` auth.createUserWithEmailAndPassword(email, password)` method, within the callback (`addOnCompleteListener`) of the `createNewUser` method we check to see if an error was return. If there was an error we pass it along to our View State. You will notice that right now simple checks control our validation of input but we can have that live in the View Modle and persist through the View State as well. Currently I left the `isValidated` variable in but it is unused. Otherwise we unwrap the result, create a user with that result and pass the user to the next screen. **Something to consider not mentioned here is storing the `uid` of the user. Currently if the user exits the app after creating they will still have to restart and login.
+
+
+
+### <a name="fetchingUserAndroid"> Reading In A User From The Database </a>
+
+**Fetching User:** 
+```kotlin
+fun fetchUser(savedUID: String) { 
+db.reference.child("Users").child(savedUID).addListenerForSingleValueEvent( object : ValueEventListener { 
+override fun onDataChange(dataSnapshot: DataSnapshot) { 
+val data = dataSnapshot.getValue(User::class.java) 
+
+if (data != null) { 
+user = user?.copy( 
+uid = savedUID, 
+email = data.email, 
+firstName = data.firstName, 
+lastName = data.lastName ) 
+} 
+
+mainProgressBar.visibility = GONE addFragmentToActivity(supportFragmentManager, ReminderView(), R.id.mainActivity) 
+} 
+override fun onCancelled(databaseError: DatabaseError) { } 
+})
+}
+```
+
+### <a name="savingReminderAndroid"> Writing A Reminder To The Database </a>
+
+Before we can write a `Reminder` reminder we must first create the corresponding data type. Create a new file and name it `Reminder.kt` and add the following code to the new file.
+
+```kotlin
+data class Reminder ( 
+var id : String? = null, 
+var title : String? = "", 
+var description : String? = "", 
+var isComplete : Boolean? = false, 
+var timestamp: Double? = null 
+)
+```
+You may be wondering what the `timestamp` and member is for. When we are fetching our data from Firebase it comes back asynchronously which essentially means that the data that comes back may not be in the same order as it was before, so we can use the timestamp member to sort the data.
+
+Before we write the code for this lets take a step back and think about how we want this data to be structured in our database. We will have a top level node called "Reminders". Now each user will have their own list of reminders so we can create another node keyed by the user's unique identifier. Each reminder will need it's own node so we can achieve keying the node by the reminder's id, and finally we can set the reminders data. This should look like so
+
+![Screen Shot 2019-06-16 at 7 33 52 PM](https://user-images.githubusercontent.com/22037563/59570971-b2f8de00-906d-11e9-892e-d3e1c653bdf3.png)
+
+Let's see how this will look in code 
+
+**Create Reminder**
+```kotlin
+fun createReminder(uid: String, reminderID: String, title: String, description: String, timeStamp: Double) { 
+
+val reminders = currentViewState().reminders 
+
+updateState( 
+ReminderViewState( 
+progressType = ProgressType.Loading, 
+isValidated = currentViewState().isValidated, 
+reminders = reminders, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID )
+) 
+
+db.reference.child("Reminders").child(uid).child(reminderID).setValue( 
+Reminder( 
+reminderID, 
+title = title, 
+description = description, 
+isComplete = false, 
+timestamp = timeStamp )
+).addOnCompleteListener { 
+if (it.isSuccessful) { 
+updateState( 
+ReminderViewState( 
+progressType = ProgressType.Result, 
+reminders = reminders, 
+isValidated = currentViewState().isValidated, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID ) 
+) 
+fetchReminders(uid) 
+} else { 
+updateState( 
+ReminderViewState( 
+progressType = ProgressType.Failure, 
+reminders = currentViewState().reminders, 
+isValidated = currentViewState().isValidated, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID ) ) } } 
+}
+```
+
+During successfully creating a reminder you can see that we fetch reminders from the database. Fetching is shown below.
+
+### <a name="reading/witingRemindersAndroid"> Reading In A List Of Reminders From The Database </a>
+
+Reading Reminders from the database. Much like how we have been communicating with the database we will with reading reminders from the database. We key into the Reminders then use the users `uid`. After which we can grab and sort our data from the database.
+
+**Fetching Reminders:**
+```kotlin
+fun fetchReminders(uid: String) {
+if (uid.isNotEmpty()) { 
+updateState( 
+ReminderViewState( 
+progressType = ProgressType.Loading, 
+isValidated = currentViewState().isValidated, 
+reminders = currentViewState().reminders, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID ) 
+) 
+
+db.reference.child("Reminders").child(uid).addListenerForSingleValueEvent( object : ValueEventListener { 
+
+override fun onDataChange(dataSnapshot: DataSnapshot) { 
+val data = dataSnapshot.children 
+val reminders = mutableListOf<Reminder>() 
+
+for (child in data) { 
+val newReminder = child.getValue(Reminder::class.java)
+
+if (newReminder != null) { 
+reminders.add(newReminder) 
+}
+} 
+
+reminders.sortBy { it.timestamp } 
+
+updateState( 
+ReminderViewState( 
+progressType = ProgressType.Result, 
+reminders = reminders, 
+isValidated = currentViewState().isValidated, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID ) 
+) 
+} 
+
+override fun onCancelled(databaseError: DatabaseError) { 
+updateState( 
+ReminderViewState( 
+progressType = ProgressType.Failure, 
+reminders = currentViewState().reminders, 
+isValidated = currentViewState().isValidated, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID ) ) } } ) 
+} else { 
+updateState( 
+ReminderViewState( 
+progressType = ProgressType.Failure, 
+reminders = currentViewState().reminders, 
+isValidated = currentViewState().isValidated, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID ) ) } 
+}
+```
+
+**Edit a reminder:**
+```kotlin
+fun editReminder( uid: String, reminderID: String, title: String, description: String, isComplete: Boolean, timeStamp: Double ) { 
+
+val reminders = currentViewState().reminders 
+
+updateState( ReminderViewState( 
+progressType = ProgressType.Loading, 
+isValidated = currentViewState().isValidated, 
+reminders = reminders, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID ) 
+) 
+
+db.reference.child("Reminders").child(uid).child(reminderID).setValue( 
+Reminder( 
+reminderID, 
+title = title, 
+description = description, 
+isComplete = isComplete, 
+timestamp = timeStamp ) 
+).addOnCompleteListener { 
+if (it.isSuccessful) { 
+updateState( 
+ReminderViewState( 
+progressType = ProgressType.Result, 
+reminders = reminders, 
+isValidated = currentViewState().isValidated, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID 
+) 
+) 
+
+fetchReminders(uid) 
+} else { 
+updateState( 
+ReminderViewState( 
+progressType = ProgressType.Failure, 
+reminders = currentViewState().reminders, 
+isValidated = currentViewState().isValidated, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID ) ) } } 
+}
+```
+
+**Delete Reminder:**
+```kotlin
+fun deleteReminder(uid: String, reminder: Reminder) { 
+if (uid.isEmpty()) { 
+db.reference.child("Reminders").child(uid).child(reminder.id!!).removeValue().addOnCompleteListener { 
+if (it.isSuccessful) { 
+updateState( 
+ReminderViewState( 
+progressType = ProgressType.Result, 
+reminders = currentViewState().reminders, 
+isValidated = currentViewState().isValidated, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID )
+ ) 
+fetchReminders(uid) 
+} else { 
+updateState( 
+ReminderViewState( 
+progressType = ProgressType.Failure, 
+reminders = currentViewState().reminders, 
+isValidated = currentViewState().isValidated, 
+markedForDeletion = currentViewState().markedForDeletion, 
+markedForCompletion = currentViewState().markedForCompletion, 
+userUID = currentViewState().userUID ) ) } } } 
+}
+```
+
+
 <a name="conclusion"> Conclusion </a>
 --------------
 
