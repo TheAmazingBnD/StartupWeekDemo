@@ -4,6 +4,9 @@ In honor of Detriots startup week we have taking the liberty of implementing a b
 
 The project we have decided to create is a simple reminder application. Throughout the course of this README we will be explaining how to: implement email and password authentication using Firebase/Auth, reading and writing to a NoSQL database using Firebase/Database, and how to construct relationships between models in JSON.
 
+<>
+<a href= "#Android">Android</a>
+<a href= "#IOS">IOS</a>
 
 # iOS
 
