@@ -16,7 +16,14 @@ class SignUpViewModel : ViewModel() {
         viewState.value = SignUpViewState(progressType = ProgressType.NotAsked, isValidated = false)
     }
 
-    fun currentViewState(): SignUpViewState = viewState.value!!
+    private fun currentViewState(): SignUpViewState = viewState.value!!
+
+    private fun updateState(newState: SignUpViewState) {
+        viewState.value = currentViewState().copy(
+            progressType = newState.progressType,
+            isValidated = newState.isValidated
+        )
+    }
 
     fun validateInput(input: String) {
         if (input.isNotEmpty()) {
@@ -34,7 +41,8 @@ class SignUpViewModel : ViewModel() {
             )
             auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful) {
-                    //Registration OK
+                    // Assert Non null here because we had a
+                    // successful login as per result. **There are better ways**
                     val user = auth.currentUser!!
                     db.reference.child("Users").child(user.uid).setValue(
                         hashMapOf<String, Any>(
@@ -43,7 +51,6 @@ class SignUpViewModel : ViewModel() {
                             Pair("lastName", lastName)
                         )
                     )
-//                    db.reference.setValue("tits")
 
                     updateState(
                         SignUpViewState(
@@ -52,7 +59,6 @@ class SignUpViewModel : ViewModel() {
                         )
                     )
                 } else {
-                    //Registration error
                     updateState(
                         SignUpViewState(
                             progressType = ProgressType.Failure,
@@ -69,10 +75,6 @@ class SignUpViewModel : ViewModel() {
                 )
             )
         }
-    }
-
-    private fun updateState(newState: SignUpViewState) {
-        viewState.value = currentViewState().copy(progressType = newState.progressType, isValidated = newState.isValidated)
     }
 
     data class SignUpViewState(val progressType: ProgressType, val isValidated: Boolean)

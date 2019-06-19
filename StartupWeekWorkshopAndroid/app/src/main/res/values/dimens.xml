@@ -1,3 +1,28 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="login_tv_margin">24dp</dimen>
+    <dimen name="login_text_size">14sp</dimen>
+    <dimen name="default_padding">10dp</dimen>
+    <dimen name="default_elevation">2dp</dimen>
+    <dimen name="welcome_text_size">32sp</dimen>
+    <dimen name="welcome_tv_margin">24dp</dimen>
+    <dimen name="default_toolbar_elevation">4dp</dimen>
+    <dimen name="dialog_title_et_margin">16dp</dimen>
+    <dimen name="dialog_tilte_et_text_size">28sp</dimen>
+    <dimen name="dialog_deacription_et_margin">16dp</dimen>
+    <dimen name="dialog_deacription_et_text_size">18sp</dimen>
+    <dimen name="dialog_timestamp_et_margin">12dp</dimen>
+    <dimen name="dialog_timestamp_et_text_size">18sp</dimen>
+    <dimen name="delete_button_margin">10dp</dimen>
+    <dimen name="guidline_constraint_begin_amount">590dp</dimen>
+    <dimen name="default_button_margin">14dp</dimen>
+    <dimen name="status_button_margin">12dp</dimen>
+    <dimen name="default_tv_margin">10dp</dimen>
+    <dimen name="title_tv_text_size">24sp</dimen>
+    <dimen name="description_tv_size">16sp</dimen>
+    <dimen name="default_tv_text_size_small">12sp</dimen>
+    <dimen name="welcom_tv_margin">24dp</dimen>
+    <dimen name="welcome_tv_large">32sp</dimen>
+    <dimen name="default_tv_margin_mid">16dp</dimen>
+    <dimen name="signup_login_button_text_size">18sp</dimen>
 </resources>

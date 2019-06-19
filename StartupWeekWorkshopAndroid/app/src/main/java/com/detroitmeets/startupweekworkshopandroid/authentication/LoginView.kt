@@ -29,9 +29,6 @@ class LoginView : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        setTextWatcher(loginEmail)
-//        setTextWatcher(loginPassword)
-
         loginButton.setOnClickListener {
             viewModel.postLogin(
                 loginEmail.text.toString(),
@@ -59,67 +56,33 @@ class LoginView : Fragment() {
 
     private fun render(viewState: LoginViewModel.LoginViewState) {
         when (viewState.progressType) {
-            ProgressType.NotAsked -> {}
-//                Snackbar.make(view!!, "Please input and confirm informaion", Snackbar.LENGTH_SHORT).setAction("Okey") {
-//
-//                }.show()
-            ProgressType.Loading -> { loginProgressBar.visibility = VISIBLE }
-            ProgressType.Result -> {
-                if (loginProgressBar.visibility == VISIBLE) {
-                    loginProgressBar.visibility = View.GONE
-                }
-
-                SharedPrefsManager(requireContext()).setCurrentUser(viewModel.currentViewState().userUID)
-                MainActivity().addFragmentToActivity(fragmentManager, ReminderView(), R.id.mainActivity)
-            }
-            ProgressType.Failure -> {
-                Snackbar.make(view!!, "Error Logging In", Snackbar.LENGTH_SHORT).setAction("Okey") {
-
-                }.show()
-                if (loginProgressBar.visibility == VISIBLE) {
-                    loginProgressBar.visibility = View.GONE
-                }
-            }
+            ProgressType.NotAsked -> renderNotAsked()
+            ProgressType.Loading -> loginProgressBar.visibility = VISIBLE
+            ProgressType.Result -> renderResult()
+            ProgressType.Failure -> renderFailure()
         }
-
-        //        if (viewState.isValidated) {
-        //            loginButton.alpha = 1f
-        //            loginButton.isEnabled = true
-        //        } else {
-        //            loginButton.alpha = 0.5f
-        //            loginButton.isEnabled = false
-        //        }
     }
 
-    private fun setTextWatcher(editText: EditText) {
-        val textWatcher = object : TextWatcher {
-            override fun afterTextChanged(sequence: Editable?) {
-                viewModel.validateInput(sequence.toString())
-            }
+    private fun renderNotAsked() = Snackbar.make(
+        view!!,
+        getString(R.string.please_confirm),
+        Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
 
-            override fun beforeTextChanged(sequence: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(sequence: CharSequence?, start: Int, before: Int, count: Int) {
-            }
+    private fun renderResult() {
+        if (loginProgressBar.visibility == VISIBLE) {
+            loginProgressBar.visibility = View.GONE
         }
-        editText.addTextChangedListener(textWatcher)
+        SharedPrefsManager(requireContext()).setCurrentUser(viewModel.currentViewState().userUID)
+        MainActivity().addFragmentToActivity(fragmentManager, ReminderView(), R.id.mainActivity)
     }
 
-    private fun renderNotAsked() {
-
+    private fun renderFailure() {
+        Snackbar.make(
+            view!!,
+            getString(R.string.error_logging_in),
+            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
+        if (loginProgressBar.visibility == VISIBLE) {
+            loginProgressBar.visibility = View.GONE
+        }
     }
-
-    private fun renderLoading() {
-
-    }
-
-    private fun rederResult() {
-
-    }
-
-    private fun rederFailure() {
-
-    }
-
 }

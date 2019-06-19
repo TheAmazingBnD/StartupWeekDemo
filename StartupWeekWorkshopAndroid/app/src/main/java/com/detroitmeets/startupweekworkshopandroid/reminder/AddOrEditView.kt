@@ -18,17 +18,22 @@ import com.detroitmeets.startupweekworkshopandroid.api.models.Reminder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.add_edit_dialog.*
 import java.sql.Timestamp
-import java.util.*
 
-class AddOrEditView(val isEdit: Boolean, val reminder: Reminder) : Fragment() {
+class AddOrEditView(private val isEdit: Boolean, val reminder: Reminder) : Fragment() {
 
-    private val viewModel = ReminderViewModel(user?.uid.orEmpty())
+    private val viewModel = ReminderViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.add_edit_dialog, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        val user = SharedPrefsManager(requireContext()).getCurrentUser()
+        if (user.isNotEmpty()) {
+            viewModel.fetchReminders(user)
+        }
 
         if (isEdit) {
             setUpEditView()
@@ -37,7 +42,7 @@ class AddOrEditView(val isEdit: Boolean, val reminder: Reminder) : Fragment() {
         confirmButton.setOnClickListener {
             if (isEdit) {
                 viewModel.editReminder(
-                    user?.uid!!,
+                    user,
                     reminder.id!!,
                     dialogTitle.text.toString(),
                     dialogDescription.text.toString(),
@@ -46,7 +51,7 @@ class AddOrEditView(val isEdit: Boolean, val reminder: Reminder) : Fragment() {
                 )
             } else {
                 viewModel.createReminder(
-                    user?.uid!!,
+                    user,
                     reminder.id!!,
                     dialogTitle.text.toString(),
                     dialogDescription.text.toString(),
@@ -63,7 +68,7 @@ class AddOrEditView(val isEdit: Boolean, val reminder: Reminder) : Fragment() {
 
         viewModel.viewState.observe(this, Observer<ReminderViewModel.ReminderViewState> {
             if (it.markedForDeletion) {
-                viewModel.deleteReminder(user?.uid!!, reminder)
+                viewModel.deleteReminder(user, reminder)
             }
             render(it)
         })
@@ -84,26 +89,15 @@ class AddOrEditView(val isEdit: Boolean, val reminder: Reminder) : Fragment() {
 
     private fun render(viewState: ReminderViewModel.ReminderViewState) {
         when (viewState.progressType) {
-            ProgressType.NotAsked -> {
-            }
-//                Snackbar.make(view!!, "Please input and confirm informaion", Snackbar.LENGTH_SHORT).setAction("Okey") {
-//
-//                }.show()
-            ProgressType.Loading -> {
-            }
-            ProgressType.Result -> {
-//                MainActivity().addFragmentToActivity(fragmentManager, ReminderView(), R.id.mainActivity)
-            }
-            ProgressType.Failure -> {
-                Snackbar.make(view!!, "Error", Snackbar.LENGTH_SHORT).setAction("Okey") {
-
-                }.show()
-            }
+            ProgressType.NotAsked -> renderNotAsked()
+            ProgressType.Loading -> renderLoading()
+            ProgressType.Result -> renderResult()
+            ProgressType.Failure -> renderFailure()
         }
     }
 
     private fun setUpEditView() {
-        editToolbar.title = "Edit Reminder"
+        editToolbar.title = getString(R.string.edit_reminder)
         statusButton.visibility = VISIBLE
         deleteReminder.visibility = VISIBLE
         dialogTimestamp.visibility = VISIBLE
@@ -113,16 +107,16 @@ class AddOrEditView(val isEdit: Boolean, val reminder: Reminder) : Fragment() {
         dialogTimestamp.text = Timestamp(reminder.timestamp!!.toLong()).toString()
 
         if (reminder.isComplete == true) {
-            statusButton.text = "Completed"
+            statusButton.text = getString(R.string.complete)
             statusButton.setTextColor(ResourcesCompat.getColor(resources, R.color.lightGreen, null))
         } else {
-            statusButton.text = "In Progress"
+            statusButton.text = getString(R.string.in_progress)
             ResourcesCompat.getColor(resources, R.color.redDark, null)
         }
 
         statusButton.setOnClickListener {
-            if (statusButton.text.toString().equals("In Progress", ignoreCase = true)) {
-                statusButton.text = "Completed"
+            if (statusButton.text.toString().equals(getString(R.string.in_progress), ignoreCase = true)) {
+                statusButton.text = getString(R.string.complete)
                 statusButton.setTextColor(
                     ResourcesCompat.getColor(
                         resources,
@@ -132,7 +126,7 @@ class AddOrEditView(val isEdit: Boolean, val reminder: Reminder) : Fragment() {
                 )
                 viewModel.toggleMarkedForCompletion(true)
             } else {
-                statusButton.text = "In Progress"
+                statusButton.text = getString(R.string.complete)
                 statusButton.setTextColor(
                     ResourcesCompat.getColor(
                         resources,
@@ -150,14 +144,14 @@ class AddOrEditView(val isEdit: Boolean, val reminder: Reminder) : Fragment() {
     }
 
     private fun showConfirmDeleteDialog() {
-        val confrimDialog = AlertDialog.Builder(context)
-        confrimDialog.setTitle("Confirm Delete")
-            .setMessage("Are you sure you want to delete this reminder?")
-            .setPositiveButton("Ok") { dialog, which ->
+        val confirmDialog = AlertDialog.Builder(context)
+        confirmDialog.setTitle(getString(R.string.confirm_delete))
+            .setMessage(getString(R.string.confirm_delete_message))
+            .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                 viewModel.toggleMarkedForDeletion(true)
                 dialog.dismiss()
             }
-            .setNegativeButton("Cancel") { dialog, which ->
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                 viewModel.toggleMarkedForDeletion(false)
                 dialog.cancel()
             }.show().setOnDismissListener {
@@ -182,4 +176,28 @@ class AddOrEditView(val isEdit: Boolean, val reminder: Reminder) : Fragment() {
         }
         editText.addTextChangedListener(textWatcher)
     }
+
+    private fun renderNotAsked() =
+        Snackbar.make(
+            view!!,
+            getString(R.string.add_delete_edit),
+            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
+
+    private fun renderLoading() =
+        Snackbar.make(
+            view!!,
+            getString(R.string.please_wait),
+            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
+
+    private fun renderResult() =
+        Snackbar.make(
+            view!!,
+            getString(R.string.complete),
+            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
+
+    private fun renderFailure() =
+        Snackbar.make(
+            view!!,
+            getString(R.string.generic_reminder_error),
+            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
 }

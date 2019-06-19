@@ -7,7 +7,9 @@
         android:layout_height="match_parent"
         android:id="@+id/mainActivity"
         android:background="#ffffff"
-        tools:context=".MainActivity">
+        tools:context=".MainActivity"
+        android:noHistory = "true"
+>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -25,12 +27,26 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:title="Detroit Android"
-                android:elevation="4dp"
+                android:title="@string/detroit_android"
+                android:elevation="@dimen/default_toolbar_elevation"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
         />
     </com.google.android.material.appbar.AppBarLayout>
+
+        <ProgressBar
+                android:id="@+id/mainProgressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:progressDrawable="@drawable/circular_progress_bar"
+                android:layout_centerHorizontal="true"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone"
+        />
 
     <TextView
             android:id="@+id/welcomeTV"
@@ -38,12 +54,12 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textColor="#000000"
-            android:layout_margin="24dp"
+            android:layout_margin="@dimen/welcome_tv_margin"
             android:maxLines="2"
-            android:textSize="32sp"
-            android:padding="10dp"
+            android:textSize="@dimen/welcome_text_size"
+            android:padding="@dimen/default_padding"
             android:typeface="serif"
-            android:text="Welcome To Detroit Startup Week!"
+            android:text="@string/welcome"
             app:layout_constraintTop_toBottomOf="@id/appBarLayout"
             app:layout_constraintBottom_toTopOf="@id/signUpButtonMain"
             app:layout_constraintEnd_toEndOf="parent"
@@ -54,9 +70,9 @@
             android:id="@+id/signUpButtonMain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="2dp"
+            android:elevation="@dimen/default_elevation"
             android:layout_margin="@dimen/fab_margin"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/mainLoginTV"
@@ -67,10 +83,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_margin="24dp"
-            android:textSize="14sp"
-            android:padding="10dp"
-            android:text="Or Login"
+            android:layout_margin="@dimen/login_tv_margin"
+            android:textSize="@dimen/login_text_size"
+            android:padding="@dimen/default_padding"
+            android:text="@string/or_login"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

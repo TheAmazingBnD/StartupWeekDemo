@@ -1,6 +1,5 @@
 package com.detroitmeets.startupweekworkshopandroid.reminder
 
-import android.app.AlertDialog
 import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
@@ -11,18 +10,11 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.detroitmeets.startupweekworkshopandroid.ProgressType
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reminder_view.*
-import android.view.View.VISIBLE
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.detroitmeets.startupweekworkshopandroid.MainActivity
-import com.detroitmeets.startupweekworkshopandroid.R
+import com.detroitmeets.startupweekworkshopandroid.*
 import com.detroitmeets.startupweekworkshopandroid.api.models.Reminder
-import com.detroitmeets.startupweekworkshopandroid.user
-import kotlinx.android.synthetic.main.add_edit_dialog.*
-import kotlinx.android.synthetic.main.add_edit_dialog.view.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.sql.Timestamp
 import java.util.*
@@ -30,7 +22,7 @@ import java.util.*
 
 class ReminderView : Fragment() {
 
-    private val viewModel = ReminderViewModel(user?.uid.orEmpty())
+    private val viewModel = ReminderViewModel()
     private val adapter = ReminderListAdapter {
         reminderClicked(it)
     }
@@ -41,7 +33,10 @@ class ReminderView : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.fetchReminders(user?.uid!!)
+        val user = SharedPrefsManager(requireContext()).getCurrentUser()
+        if (user.isNotEmpty()) {
+            viewModel.fetchReminders(user)
+        }
 
         fabAddToDo.setOnClickListener {
             MainActivity().addFragmentToActivity(
@@ -82,23 +77,12 @@ class ReminderView : Fragment() {
         super.onConfigurationChanged(newConfig)
     }
 
-
     private fun render(viewState: ReminderViewModel.ReminderViewState) {
         when (viewState.progressType) {
-            ProgressType.NotAsked -> {}
-//                Snackbar.make(view!!, "Please input and confirm informaion", Snackbar.LENGTH_SHORT).setAction("Okey") {
-//
-//                }.show()
-            ProgressType.Loading -> {
-            }
-            ProgressType.Result -> {
-//                MainActivity().addFragmentToActivity(fragmentManager, ReminderView(), R.id.mainActivity)
-            }
-            ProgressType.Failure -> {
-                Snackbar.make(view!!, "Error", Snackbar.LENGTH_SHORT).setAction("Okey") {
-
-                }.show()
-            }
+            ProgressType.NotAsked -> renderNotAsked()
+            ProgressType.Loading -> renderLoading()
+            ProgressType.Result -> renderResult()
+            ProgressType.Failure -> renderFailure()
         }
     }
 
@@ -120,5 +104,27 @@ class ReminderView : Fragment() {
         }
         editText.addTextChangedListener(textWatcher)
     }
+    private fun renderNotAsked() =
+        Snackbar.make(
+        view!!,
+        getString(R.string.add_delete_edit),
+        Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
 
+    private fun renderLoading() =
+        Snackbar.make(
+            view!!,
+            getString(R.string.please_wait),
+            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
+
+    private fun renderResult() =
+        Snackbar.make(
+            view!!,
+            getString(R.string.complete),
+            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
+
+    private fun renderFailure() =
+        Snackbar.make(
+            view!!,
+            getString(R.string.generic_reminder_error),
+            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
 }
