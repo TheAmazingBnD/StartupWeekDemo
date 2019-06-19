@@ -435,8 +435,8 @@ So first we check to see if the current user is authenicated. Then we key into t
 5. [Interacting With The Firebase Database](#databaseAndroid)
      - [Writing A User To The Database](#savingUserAndroid)
      - [Reading In A User From The Database](#fetchingUserAndroid)
-     - [Writing A Reminder To The Database](#savingRemindeAndroidr)
-     - [Reading In A List Of Reminders From The Database](#reading/writingRemindersAndroid)
+     - [Writing A Reminder To The Database](#savingReminderAndroid)
+     - [Reading In A List Of Reminders From The Database](#readingwritingRemindersAndroid)
 6. [Conclusion](#conclusion)
 
 <a name="newASProject"> Creating A New Android Studio Project </a>
@@ -746,7 +746,7 @@ userUID = currentViewState().userUID ) ) } }
 
 During successfully creating a reminder you can see that we fetch reminders from the database. Fetching is shown below.
 
-### <a name="reading/witingRemindersAndroid"> Reading In A List Of Reminders From The Database </a>
+### <a name="readingwritingRemindersAndroid"> Reading In A List Of Reminders From The Database </a>
 
 Reading Reminders from the database. Much like how we have been communicating with the database we will with reading reminders from the database. We key into the Reminders then use the users `uid`. After which we can grab and sort our data from the database.
 
