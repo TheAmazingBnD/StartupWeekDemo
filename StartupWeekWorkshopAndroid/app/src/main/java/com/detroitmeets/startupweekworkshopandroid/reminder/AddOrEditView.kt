@@ -90,8 +90,8 @@ class AddOrEditView(private val isEdit: Boolean, val reminder: Reminder) : Fragm
     private fun render(viewState: ReminderViewModel.ReminderViewState) {
         when (viewState.progressType) {
             ProgressType.NotAsked -> renderNotAsked()
-            ProgressType.Loading -> renderLoading()
-            ProgressType.Result -> renderResult()
+            ProgressType.Loading -> {}
+            ProgressType.Result -> {}
             ProgressType.Failure -> renderFailure()
         }
     }
@@ -126,7 +126,7 @@ class AddOrEditView(private val isEdit: Boolean, val reminder: Reminder) : Fragm
                 )
                 viewModel.toggleMarkedForCompletion(true)
             } else {
-                statusButton.text = getString(R.string.complete)
+                statusButton.text = getString(R.string.in_progress)
                 statusButton.setTextColor(
                     ResourcesCompat.getColor(
                         resources,
@@ -181,18 +181,6 @@ class AddOrEditView(private val isEdit: Boolean, val reminder: Reminder) : Fragm
         Snackbar.make(
             view!!,
             getString(R.string.add_delete_edit),
-            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
-
-    private fun renderLoading() =
-        Snackbar.make(
-            view!!,
-            getString(R.string.please_wait),
-            Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
-
-    private fun renderResult() =
-        Snackbar.make(
-            view!!,
-            getString(R.string.complete),
             Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
 
     private fun renderFailure() =

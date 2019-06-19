@@ -2,13 +2,10 @@ package com.detroitmeets.startupweekworkshopandroid.authentication
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.detroitmeets.startupweekworkshopandroid.MainActivity
@@ -30,7 +27,7 @@ class LoginView : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loginButton.setOnClickListener {
-            viewModel.postLogin(
+            viewModel.login(
                 loginEmail.text.toString(),
                 loginPassword.text.toString()
             )

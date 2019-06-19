@@ -16,22 +16,13 @@ class SignUpViewModel : ViewModel() {
         viewState.value = SignUpViewState(progressType = ProgressType.NotAsked, isValidated = false)
     }
 
-    private fun currentViewState(): SignUpViewState = viewState.value!!
-
-    private fun updateState(newState: SignUpViewState) {
-        viewState.value = currentViewState().copy(
-            progressType = newState.progressType,
-            isValidated = newState.isValidated
-        )
-    }
-
     fun validateInput(input: String) {
         if (input.isNotEmpty()) {
             updateState(SignUpViewState(progressType = currentViewState().progressType, isValidated = true))
         }
     }
 
-    fun postSignUp(email: String, password: String, firstName: String, lastName: String) {
+    fun createNewUser(email: String, password: String, firstName: String, lastName: String) {
         if (email.isNotEmpty() && password.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty()) {
             updateState(
                 SignUpViewState(
@@ -75,6 +66,15 @@ class SignUpViewModel : ViewModel() {
                 )
             )
         }
+    }
+
+    private fun currentViewState(): SignUpViewState = viewState.value!!
+
+    private fun updateState(newState: SignUpViewState) {
+        viewState.value = currentViewState().copy(
+            progressType = newState.progressType,
+            isValidated = newState.isValidated
+        )
     }
 
     data class SignUpViewState(val progressType: ProgressType, val isValidated: Boolean)
