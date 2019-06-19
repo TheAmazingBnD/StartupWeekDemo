@@ -12,12 +12,14 @@ class ReminderListItemViewHolder(val view: View) : RecyclerView.ViewHolder(view)
     fun bind(newValue: Reminder) {
         view.listItemTitle.text = newValue.title
         view.listItemDescription.text = newValue.description
+
         view.listItemTimeStamp.text = Timestamp(newValue.timestamp!!.toLong()).toString()
+
         if (newValue.isComplete == true) {
-            view.listItemStatus.text = "Complete"
+            view.listItemStatus.text = view.context.getString(R.string.complete)
             view.listItemStatus.setTextColor(ResourcesCompat.getColor(view.resources, R.color.lightGreen, null))
         } else {
-            view.listItemStatus.text = "In Progress"
+            view.listItemStatus.text = view.context.getString(R.string.in_progress)
             view.listItemStatus.setTextColor(ResourcesCompat.getColor(view.resources, R.color.redDark, null))
         }
     }

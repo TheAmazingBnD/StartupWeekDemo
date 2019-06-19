@@ -46,22 +46,24 @@ class LoginViewModel : ViewModel() {
             )
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful) {
-                    //Registration OK
 
+                    // Assert Non null here because we had a
+                    // successful login as per result. **There are better ways**
                     val authUser = auth.currentUser!!
-//                    db.reference.setValue("tits")
 
                     db.reference.child("Users").child(authUser.uid).addListenerForSingleValueEvent(
                         object : ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
                                 val data = dataSnapshot.getValue(User::class.java)
 
-                                user = user?.copy(
-                                    uid = authUser.uid,
-                                    email = data?.email,
-                                    firstName = data?.firstName,
-                                    lastName = data?.lastName
-                                )
+                                if(data != null) {
+                                    user = user?.copy(
+                                        uid = authUser.uid,
+                                        email = data.email,
+                                        firstName = data.firstName,
+                                        lastName = data.lastName
+                                    )
+                                }
 
                                 updateState(
                                     LoginViewState(
@@ -72,9 +74,7 @@ class LoginViewModel : ViewModel() {
                                 )
                             }
 
-
                             override fun onCancelled(databaseError: DatabaseError) {
-//                                println("The read failed: " + databaseError.code)
                                 updateState(
                                     LoginViewState(
                                         progressType = ProgressType.Failure,
@@ -86,7 +86,6 @@ class LoginViewModel : ViewModel() {
                         }
                     )
                 } else {
-                    //Registration error
                     updateState(
                         LoginViewState(
                             progressType = ProgressType.Failure,

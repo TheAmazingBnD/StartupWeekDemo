@@ -29,6 +29,8 @@ class SignUpView : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // This is a fun thing that will be userful for other Android devs (Not necessary in this case)
+
 //        setTextWatcher(signUpFirstName)
 //        setTextWatcher(signUpLastName)
 //        setTextWatcher(signUpEmail)
@@ -81,23 +83,14 @@ class SignUpView : Fragment() {
 
     private fun render(viewState: SignUpViewModel.SignUpViewState) {
         when (viewState.progressType) {
-            ProgressType.NotAsked ->
-                Snackbar.make(view!!, "Please input and confirm informaion", Snackbar.LENGTH_SHORT).setAction("Okey") {
-
-                }.show()
+            ProgressType.NotAsked -> renderNotAsked()
             ProgressType.Loading -> signUpProgressBar.visibility = VISIBLE
-            ProgressType.Result -> {
-                if (signUpProgressBar.visibility == VISIBLE) {
-                    signUpProgressBar.visibility = GONE
-                }
-
-                MainActivity().addFragmentToActivity(fragmentManager, ReminderView(), R.id.mainActivity)
-            }
-            ProgressType.Failure -> {
-
-            }
+            ProgressType.Result -> renderResult()
+            ProgressType.Failure -> renderFailure()
         }
 
+        //Fun gotcha I chose not to continue with.
+        // Graying out a button and disabling until valid input
 //        if (viewState.isValidated) {
 //            confirmSignUpButton.alpha = 1f
 //            confirmSignUpButton.isEnabled = true
@@ -107,19 +100,20 @@ class SignUpView : Fragment() {
 //        }
     }
 
-    private fun renderNotAsked() {
+    private fun renderNotAsked() = Snackbar.make(
+        view!!,
+        getString(R.string.please_confirm),
+        Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
 
+    private fun renderResult() {
+        if (signUpProgressBar.visibility == VISIBLE) {
+            signUpProgressBar.visibility = GONE
+        }
+        MainActivity().addFragmentToActivity(fragmentManager, ReminderView(), R.id.mainActivity)
     }
 
-    private fun renderLoading() {
-
-    }
-
-    private fun rederResult() {
-
-    }
-
-    private fun rederFailure() {
-
-    }
+    private fun renderFailure() = Snackbar.make(
+        view!!,
+        getString(R.string.error_signing_up),
+        Snackbar.LENGTH_SHORT).setAction(getString(R.string.ok)) {}.show()
 }
