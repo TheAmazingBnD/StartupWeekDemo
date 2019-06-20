@@ -454,7 +454,7 @@ We will want to create a Firbase project before we get too ahead of ourselves. H
 
 We will now to add an Android app to our project. In the project overview section tap the Android button; here you will be prompted for a bundle identifier. Open Android Studio back up, head over to your App modules `build.gradle`. Here you will see an `applicationId`. Grab that and drop it into Firebase 
 
-Next download the `google-services.json` and drag and drop it into the Android project in `App -> src`. Pop back over to the Firebase console and finish the prompted setup. Congratulations! You have just successfully created a Firebase project and registered your Android app!
+Next download the `google-services.json` and drag and drop it into the Android project in `App` directory. Pop back over to the Firebase console and finish the prompted setup. Congratulations! You have just successfully created a Firebase project and registered your Android app!
 
 ### <a name="importFirebaseAndroid"> Importing Firebase Into Our Project </a>
 
