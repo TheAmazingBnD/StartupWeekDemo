@@ -231,7 +231,7 @@ class ReminderViewModel : ViewModel() {
     }
 
     fun deleteReminder(uid: String, reminder: Reminder) {
-        if (uid.isEmpty()) {
+        if (uid.isNotEmpty()) {
             db.reference.child("Reminders").child(uid).child(reminder.id!!).removeValue().addOnCompleteListener {
                 if (it.isSuccessful) {
 
