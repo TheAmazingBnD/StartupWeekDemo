@@ -23,7 +23,11 @@ import java.util.*
 class ReminderView : Fragment() {
 
     private val viewModel = ReminderViewModel()
-    private val adapter = ReminderListAdapter {
+//    private val adapter = ReminderListAdapter {
+//        reminderClicked(it)
+//    }
+
+    private val controller = ReminderEpoxyController {
         reminderClicked(it)
     }
 
@@ -57,12 +61,14 @@ class ReminderView : Fragment() {
 
         reminderRecycler.layoutManager = LinearLayoutManager(context)
 
-        reminderRecycler.adapter = adapter
 
         viewModel.viewState.observe(this, Observer<ReminderViewModel.ReminderViewState> {
-            adapter.loadItems(it.reminders ?: emptyList())
+
+            controller.setData(it.reminders ?: emptyList())
+
             render(it)
         })
+        reminderRecycler.adapter = controller.adapter
     }
 
     override fun onResume() {
@@ -104,6 +110,7 @@ class ReminderView : Fragment() {
         }
         editText.addTextChangedListener(textWatcher)
     }
+
     private fun renderNotAsked() =
         Snackbar.make(
         view!!,
