@@ -60,15 +60,14 @@ class ReminderView : Fragment() {
 
 
         reminderRecycler.layoutManager = LinearLayoutManager(context)
-
+        reminderRecycler.adapter = controller.adapter
 
         viewModel.viewState.observe(this, Observer<ReminderViewModel.ReminderViewState> {
 
-            controller.setData(it.reminders ?: emptyList())
+            controller.setData(it.reminders)
 
             render(it)
         })
-        reminderRecycler.adapter = controller.adapter
     }
 
     override fun onResume() {
