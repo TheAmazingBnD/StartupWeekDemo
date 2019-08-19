@@ -10,7 +10,10 @@ import com.detroitmeets.startupweekworkshopandroid.api.models.Reminder
 import kotlinx.android.synthetic.main.content_list_item.view.*
 import java.sql.Timestamp
 
-data class ReminderEpoxyModel(private val reminder: Reminder, private val onClick: (Reminder) -> Unit) : EpoxyModelWithView<ConstraintLayout>() {
+data class ReminderEpoxyModel(
+    private val reminder: Reminder,
+    private val onClick: (Reminder) -> Unit
+) : EpoxyModelWithView<ConstraintLayout>() {
     override fun bind(view: ConstraintLayout) {
         super.bind(view)
         view.listItemTitle.text = reminder.title

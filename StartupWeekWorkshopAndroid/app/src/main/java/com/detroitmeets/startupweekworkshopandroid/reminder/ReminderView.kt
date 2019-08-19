@@ -60,12 +60,13 @@ class ReminderView : Fragment() {
 
 
         reminderRecycler.layoutManager = LinearLayoutManager(context)
+//        reminderRecycler.adapter = adapter
         reminderRecycler.adapter = controller.adapter
 
         viewModel.viewState.observe(this, Observer<ReminderViewModel.ReminderViewState> {
 
             controller.setData(it.reminders)
-
+//            adapter.loadItems(it.reminders ?: emptyList())
             render(it)
         })
     }

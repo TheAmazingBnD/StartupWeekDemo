@@ -1,6 +1,8 @@
 package com.detroitmeets.startupweekworkshopandroid.reminder
 
+import android.system.Os.bind
 import android.view.View
+import android.widget.TextView
 import com.detroitmeets.startupweekworkshopandroid.R
 import com.detroitmeets.startupweekworkshopandroid.api.models.Reminder
 import androidx.core.content.res.ResourcesCompat
@@ -8,32 +10,62 @@ import com.airbnb.epoxy.*
 import kotlinx.android.synthetic.main.content_list_item.view.*
 import java.sql.Timestamp
 
+@EpoxyModelClass(layout = R.layout.content_list_item)
 class ReminderEpoxyWithHolder(
     private val reminder: Reminder,
     private val onClick: (Reminder) -> Unit
-): EpoxyModelWithHolder<ReminderEpoxyHolder>() {
+) : EpoxyModelWithHolder<ReminderEpoxyHolder>() {
 
-    override fun createNewHolder(): ReminderEpoxyHolder = ReminderEpoxyHolder(reminder, onClick)
     override fun getDefaultLayout(): Int = R.layout.content_list_item
-}
 
-class ReminderEpoxyHolder(val reminder: Reminder, private val onClick: (Reminder) -> Unit) : EpoxyHolder() {
-    override fun bindView(itemView: View) {
-        itemView.listItemTitle.text = reminder.title
-        itemView.listItemDescription.text = reminder.description
+    override fun createNewHolder(): ReminderEpoxyHolder = ReminderEpoxyHolder()
 
-        itemView.listItemTimeStamp.text = Timestamp(reminder.timestamp!!.toLong()).toString()
+    @EpoxyAttribute
+    lateinit var listItemTitle: String
+    @EpoxyAttribute
+    lateinit var listItemDescription: String
+    @EpoxyAttribute
+    lateinit var listItemTimeStamp: String
+    @EpoxyAttribute
+    lateinit var listItemTimeStatus: String
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    lateinit var clickListener: String
+
+    override fun bind(holder: ReminderEpoxyHolder) {
+        holder.view.listItemTitle.text = reminder.title
+        holder.view.listItemDescription.text = reminder.description
+
+        holder.view.listItemTimeStamp.text = Timestamp(reminder.timestamp!!.toLong()).toString()
 
         if (reminder.isComplete == true) {
-            itemView.listItemStatus.text = itemView.context.getString(R.string.complete)
-            itemView.listItemStatus.setTextColor(ResourcesCompat.getColor(itemView.resources, R.color.lightGreen, null))
+            holder.view.listItemStatus.text = holder.view.context.getString(R.string.complete)
+            holder.view.listItemStatus.setTextColor(
+                ResourcesCompat.getColor(
+                    holder.view.resources,
+                    R.color.lightGreen,
+                    null
+                )
+            )
         } else {
-            itemView.listItemStatus.text = itemView.context.getString(R.string.in_progress)
-            itemView.listItemStatus.setTextColor(ResourcesCompat.getColor(itemView.resources, R.color.redDark, null))
+            holder.view.listItemStatus.text =  holder.view.context.getString(R.string.in_progress)
+            holder.view.listItemStatus.setTextColor(
+                ResourcesCompat.getColor(
+                    holder.view.resources,
+                    R.color.redDark,
+                    null
+                )
+            )
         }
 
-        itemView.setOnClickListener {
+        holder.view.setOnClickListener {
             onClick(reminder)
         }
+    }
+}
+
+class ReminderEpoxyHolder : EpoxyHolder() {
+    lateinit var view: View
+    override fun bindView(itemView: View) {
+        view = itemView
     }
 }
